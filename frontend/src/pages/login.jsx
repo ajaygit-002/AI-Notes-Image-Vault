@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./style/login.css";
 
-function Login() {
+function Login({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -23,7 +23,7 @@ function Login() {
       if (!res.ok) throw new Error(data.message || "Login failed");
       setSuccess("Login successful!");
       window.alert("Login successful!");
-      // Optionally: save token to localStorage, redirect, etc.
+      if (typeof onLogin === 'function') onLogin(data.token);
     } catch (err) {
       setError(err.message);
     } finally {

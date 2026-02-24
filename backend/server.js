@@ -34,7 +34,9 @@ const UserModel = mongoose.model("User", userSchema);
 
 // Routes
 const authRoutes = require('./routes/authRoutes');
+const noteRoutes = require('./routes/noteRoutes');
 app.use(authRoutes);
+app.use('/api/notes', noteRoutes);
 app.get("/", (req, res) => {
   res.send("AI Notes & Image Vault Backend Running 🚀");
 });
