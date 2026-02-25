@@ -1,59 +1,192 @@
 import React, { useEffect, useState, useRef } from "react";
-import "../../components/style/dashboard.css";
-// chart library placeholder removed until installed
+import Chart from "chart.js/auto";
+import "./dashboard.css"; // adjust import path as needed
 
-function Dashboard() {
+const IconEdit = () => (
+  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+    <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+  </svg>
+);
+const IconTrash = () => (
+  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+    <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/>
+    <path d="M10 11v6M14 11v6M9 6V4h6v2"/>
+  </svg>
+);
+
+// ── Sample recent notes (replace with real API data) ───
+const SAMPLE_NOTES = [
+  {
+    id: 1, title: "Project Ideas for Q1 2026",
+    excerpt: "Brainstorming session notes for upcoming projects. Focus on AI integration and user experience improvements...",
+    tags: ["Work", "Projects"], date: "Feb 20, 2026",
+  },
+  {
+    id: 2, title: "Meeting Notes - Design Review",
+    excerpt: "Discussed the new dashboard layout and glassmorphism design patterns. Team agreed on indigo color scheme...",
+    tags: ["Work", "Design"], date: "Feb 22, 2026",
+  },
+  {
+    id: 3, title: "Travel Plans - Summer 2026",
+    excerpt: "Planning trip to Japan. Research destinations, book hotels, and create itinerary. Don't forget to check visa requirements...",
+    tags: ["Personal", "Travel"], date: "Feb 23, 2026",
+  },
+];
+
+// ── Dashboard Component ────────────────────────────────
+export default function Dashboard() {
   const [noteCount, setNoteCount] = useState(null);
   const [weeklyCount, setWeeklyCount] = useState(null);
+  const [tagsCount, setTagsCount] = useState(null);
   const [error, setError] = useState(null);
   const chartRef = useRef(null);
+  const chartInstance = useRef(null);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:5000/api/notes/stats', {
+        const token = localStorage.getItem("token");
+        const res = await fetch("http://localhost:5000/api/notes/stats", {
           headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          }
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         });
-        if (res.status === 401) {
-          // not authorized, redirect to login
-          window.location.href = '/login';
-          return;
-        }
+        if (res.status === 401) { window.location.href = "/login"; return; }
         if (!res.ok) {
           const text = await res.text();
-          const msg = text || res.statusText;
-          throw new Error(`Failed to load stats (${res.status}): ${msg}`);
+          throw new Error(`Failed to load stats (${res.status}): ${text || res.statusText}`);
         }
         const data = await res.json();
         setNoteCount(data.total);
         setWeeklyCount(data.weekly);
+        setTagsCount(data.tags ?? 5);
 
+        if (chartRef.current) {
+          if (chartInstance.current) chartInstance.current.destroy();
+          const labels = data.weeklyBreakdown?.labels ?? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+          const values = data.weeklyBreakdown?.values ?? [1, 3, 2, 5, 1, 4, 2];
+          chartInstance.current = new Chart(chartRef.current, {
+            type: "bar",
+            data: {
+              labels,
+              datasets: [{
+                label: "Notes created",
+                data: values,
+                backgroundColor: "rgba(108, 71, 255, 0.18)",
+                borderColor: "rgba(108, 71, 255, 0.9)",
+                borderWidth: 2,
+                borderRadius: 6,
+              }],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } },
+              scales: {
+                x: { grid: { display: false }, ticks: { color: "#aaa", font: { size: 11 } } },
+                y: { beginAtZero: true, grid: { color: "#f0f0f7" }, ticks: { color: "#aaa", font: { size: 11 }, precision: 0 } },
+              },
+            },
+          });
+        }
       } catch (err) {
-        console.error('fetchStats error', err);
+        console.error("fetchStats error", err);
         setError(err.message);
+        setNoteCount(4); setWeeklyCount(2); setTagsCount(5);
+        if (chartRef.current) {
+          if (chartInstance.current) chartInstance.current.destroy();
+          chartInstance.current = new Chart(chartRef.current, {
+            type: "bar",
+            data: {
+              labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+              datasets: [{
+                label: "Notes created",
+                data: [1, 0, 2, 1, 0, 2, 1],
+                backgroundColor: "rgba(108, 71, 255, 0.18)",
+                borderColor: "rgba(108, 71, 255, 0.9)",
+                borderWidth: 2,
+                borderRadius: 6,
+              }],
+            },
+            options: {
+              responsive: true, maintainAspectRatio: false,
+              plugins: { legend: { display: false } },
+              scales: {
+                x: { grid: { display: false }, ticks: { color: "#aaa", font: { size: 11 } } },
+                y: { beginAtZero: true, grid: { color: "#f0f0f7" }, ticks: { color: "#aaa", font: { size: 11 }, precision: 0 } },
+              },
+            },
+          });
+        }
       }
     };
     fetchStats();
+    return () => { if (chartInstance.current) chartInstance.current.destroy(); };
   }, []);
 
   return (
-    <div className="dashboard-page">
-      <h1>Dashboard</h1>
-      {error && <p className="error">{error}</p>}
-      {noteCount !== null ? (
-        <div className="stats">
-          <p>Total notes: {noteCount}</p>
-          <p>Notes this week: {weeklyCount}</p>
-        </div>
-      ) : (
-        <p>Loading statistics...</p>
-      )}
+    <div className="page-body">
+          <h1 className="page-heading">Dashboard</h1>
+          <p className="page-subheading">Welcome back! Here's an overview of your workspace.</p>
+
+          {error && (
+            <div className="error-msg">⚠ {error} — showing sample data.</div>
+          )}
+
+          {/* Stat cards */}
+          <div className="stats-grid">
+            <div className="stat-card">
+              <span className="stat-label">Total Notes</span>
+              <span className="stat-value">{noteCount ?? "—"}</span>
+              <span className="stat-sub">in your workspace</span>
+            </div>
+            <div className="stat-card">
+              <span className="stat-label">This Week</span>
+              <span className="stat-value">{weeklyCount ?? "—"}</span>
+              <span className="stat-sub">notes created</span>
+            </div>
+            <div className="stat-card">
+              <span className="stat-label">Tags</span>
+              <span className="stat-value">{tagsCount ?? "—"}</span>
+              <span className="stat-sub">categories</span>
+            </div>
+          </div>
+
+          {/* Chart */}
+          <div className="chart-card">
+            <h2>Notes Activity — This Week</h2>
+            <div className="chart-wrapper">
+              <canvas ref={chartRef} />
+            </div>
+          </div>
+
+          {/* Recent Notes */}
+          <div className="section-header">
+            <h2>Recent Notes</h2>
+            <a href="/notes">View all →</a>
+          </div>
+          <div className="notes-grid">
+            {SAMPLE_NOTES.map((note) => (
+              <div className="note-card" key={note.id}>
+                <div className="note-card-header">
+                  <h3>{note.title}</h3>
+                  <div className="note-card-actions">
+                    <button title="Edit"><IconEdit /></button>
+                    <button title="Delete"><IconTrash /></button>
+                  </div>
+                </div>
+                <p className="note-card-excerpt">{note.excerpt}</p>
+                <div className="note-tags">
+                  {note.tags.map((t) => <span className="tag" key={t}>{t}</span>)}
+                </div>
+                <div className="note-card-footer">
+                  <span>{note.date}</span>
+                </div>
+              </div>
+            ))}
+          </div>
     </div>
   );
 }
-
-export default Dashboard;

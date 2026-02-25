@@ -10,9 +10,8 @@ const app = express();
 
 // Middleware
 app.use(cors());
-// allow larger payloads for note creation with images
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ limit: '10mb', extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // MongoDB Connection
 const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/login";

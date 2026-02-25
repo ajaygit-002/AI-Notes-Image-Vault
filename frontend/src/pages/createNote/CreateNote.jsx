@@ -5,7 +5,6 @@ import "../../components/style/createNote.css";
 function CreateNote() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [image, setImage] = useState(null);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -14,16 +13,7 @@ function CreateNote() {
     setError("");
     try {
       const token = localStorage.getItem('token');
-      let body = { title, content };
-      if (image) {
-        // convert to base64 for simple storage, real app would use FormData/upload endpoint
-        const reader = new FileReader();
-        body.image = await new Promise((resolve, reject) => {
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = err => reject(err);
-          reader.readAsDataURL(image);
-        });
-      }
+      const body = { title, content };
       const res = await fetch('http://localhost:5000/api/notes', {
         method: 'POST',
         headers: {
@@ -50,11 +40,6 @@ function CreateNote() {
     }
   };
 
-  const handleImageChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setImage(e.target.files[0]);
-    }
-  };
 
   return (
     <div className="create-note-page">
@@ -83,16 +68,6 @@ function CreateNote() {
           />
         </div>
 
-        <div className="form-group">
-          <label htmlFor="note-image">Image</label>
-          <input
-            id="note-image"
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="input-field"
-          />
-        </div>
 
         <button type="submit" className="submit-btn">
           Save Note

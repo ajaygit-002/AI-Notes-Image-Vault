@@ -3,12 +3,11 @@ const Note = require('../models/Note');
 // Create Note
 exports.createNote = async (req, res) => {
   try {
-    const { title, content, image } = req.body;
+    const { title, content } = req.body;
     const note = await Note.create({
       user: req.user._id,
       title,
-      content,
-      image // optional
+      content
     });
     res.status(201).json(note);
   } catch (err) {
@@ -31,10 +30,61 @@ exports.getStats = async (req, res) => {
   try {
     const notes = await Note.find({ user: req.user._id });
     const total = notes.length;
+
+    // calculate one week ago (inclusive)
+    const today = new Date();
     const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-    const weekly = notes.filter(n => n.createdAt >= oneWeekAgo).length;
-    res.json({ total, weekly });
+    oneWeekAgo.setDate(today.getDate() - 6); // we'll count today + previous 6 days
+
+    // weekly total
+    const weeklyNotes = notes.filter(n => n.createdAt >= oneWeekAgo);
+    const weekly = weeklyNotes.length;
+
+    // build daily breakdown for the past 7 days
+    const labels = [];
+    const countsMap = {};
+    const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      const key = d.toISOString().slice(0,10); // YYYY-MM-DD
+      labels.push(dayNames[d.getDay()]);
+      countsMap[key] = 0;
+    }
+
+    weeklyNotes.forEach(n => {
+      const key = n.createdAt.toISOString().slice(0,10);
+      if (countsMap[key] !== undefined) countsMap[key]++;
+    });
+
+    const values = labels.map((_, idx) => {
+      const d = new Date(today);
+      d.setDate(today.getDate() - (6 - idx));
+      const key = d.toISOString().slice(0,10);
+      return countsMap[key] || 0;
+    });
+
+    // compute distinct tags by scanning note content/title for hashtags
+    const tagSet = new Set();
+    const tagRegex = /#(\w+)/g;
+    notes.forEach(n => {
+      let str = '';
+      if (n.title) str += n.title + ' ';
+      if (n.content) str += n.content;
+      let m;
+      while ((m = tagRegex.exec(str)) !== null) {
+        tagSet.add(m[1].toLowerCase());
+      }
+    });
+    const tags = tagSet.size;
+
+    res.json({
+      total,
+      weekly,
+      weeklyBreakdown: { labels, values },
+      tags,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
