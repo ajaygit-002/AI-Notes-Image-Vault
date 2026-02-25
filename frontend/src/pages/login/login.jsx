@@ -23,6 +23,8 @@ function Login({ onLogin }) {
       if (!res.ok) throw new Error(data.message || "Login failed");
       setSuccess("Login successful!");
       window.alert("Login successful!");
+      // save token and email locally for dashboard/nav
+      localStorage.setItem('userEmail', email);
       if (typeof onLogin === 'function') onLogin(data.token);
     } catch (err) {
       setError(err.message);

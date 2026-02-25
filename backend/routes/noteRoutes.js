@@ -4,7 +4,8 @@ const {
   createNote,
   getNotes,
   updateNote,
-  deleteNote
+  deleteNote,
+  getStats
 } = require('../controllers/noteController');
 
 const router = express.Router();
@@ -12,6 +13,9 @@ const router = express.Router();
 router.route('/')
   .post(protect, createNote)
   .get(protect, getNotes);
+
+router.route('/stats')
+  .get(protect, getStats);
 
 router.route('/:id')
   .put(protect, updateNote)

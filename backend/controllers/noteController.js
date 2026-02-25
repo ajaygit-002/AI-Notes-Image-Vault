@@ -3,11 +3,12 @@ const Note = require('../models/Note');
 // Create Note
 exports.createNote = async (req, res) => {
   try {
-    const { title, content } = req.body;
+    const { title, content, image } = req.body;
     const note = await Note.create({
       user: req.user._id,
       title,
-      content
+      content,
+      image // optional
     });
     res.status(201).json(note);
   } catch (err) {
@@ -20,6 +21,20 @@ exports.getNotes = async (req, res) => {
   try {
     const notes = await Note.find({ user: req.user._id });
     res.json(notes);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Get statistics for dashboard
+exports.getStats = async (req, res) => {
+  try {
+    const notes = await Note.find({ user: req.user._id });
+    const total = notes.length;
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const weekly = notes.filter(n => n.createdAt >= oneWeekAgo).length;
+    res.json({ total, weekly });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

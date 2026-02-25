@@ -1,0 +1,143 @@
+/* navbar.css for SecondaryNavbar */
+.secondary-navbar {
+  width: 100%;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 70px;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.nav-left, .nav-center, .nav-right {
+  display: flex;
+  align-items: center;
+}
+
+.nav-left .globe {
+  margin-right: 8px;
+  font-size: 1.2rem;
+}
+
+.nav-left .brand {
+  font-weight: bold;
+  font-size: 1.4rem;
+  color: blue;
+}
+
+.nav-center {
+  gap: 24px;
+}
+
+.nav-link {
+  color: #333;
+  text-decoration: none;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: blue;
+}
+
+.nav-link.active {
+  background: #e0f0ff;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.nav-right .btn {
+  margin-left: 12px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+  border-radius: 4px;
+  border: none;
+}
+
+.btn.outline {
+  background: transparent;
+  border: 2px solid blue;
+  color: blue;
+}
+
+.btn.outline:hover {
+  background: rgba(0,0,255,0.1);
+}
+
+.btn.filled {
+  background: blue;
+  color: white;
+}
+
+.btn.filled:hover {
+  background: #0056b3;
+}
+
+.btn.small {
+  padding: 6px 12px;
+  font-size: 0.8rem;
+}
+
+/* hamburger hidden by default */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* mobile dropdown */
+.mobile-dropdown {
+  position: absolute;
+  top: 70px;
+  left: 0;
+  width: 100%;
+  background: #f5f5f5;
+  flex-direction: column;
+  padding: 10px 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 100;
+}
+
+.mobile-links, .mobile-buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-links .nav-link {
+  padding: 8px 0;
+}
+
+.mobile-buttons .btn.full {
+  width: 100%;
+  margin: 8px 0;
+}
+
+/* Tablet adjustments */
+@media (max-width: 1024px) {
+  .nav-center {
+    gap: 16px;
+  }
+  .nav-right .btn {
+    margin-left: 8px;
+    padding: 6px 12px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .nav-center {
+    display: none;
+  }
+  .nav-right {
+    display: none;
+  }
+  .hamburger {
+    display: block;
+  }
+}
