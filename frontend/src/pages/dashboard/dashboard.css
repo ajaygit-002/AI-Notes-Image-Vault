@@ -21,33 +21,34 @@ body {
 .page-subheading { font-size: 0.9rem; color: #888; margin-bottom: 40px; text-align: center; }
 
 .stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: center;
+  width: 100%;
   margin-bottom: 28px;
-  justify-items: center;
 }
 
 .stat-card {
   background: #fff;
-  border-radius: 16px;
-  padding: 24px;
-  text-align: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  transition: transform 0.3s ease;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 22px 18px;
+  min-width: 220px;
+  max-width: 340px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 0;
-  width: 100%;
   box-sizing: border-box;
+  margin: 0 auto;
 }
 
 .stat-card:hover { transform: translateY(-5px); }
 
 .stat-card .stat-label {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: #aaa;
   font-weight: 600;
   text-transform: uppercase;
@@ -57,7 +58,7 @@ body {
 }
 
 .stat-card .stat-value {
-  font-size: 2rem;
+  font-size: 2.1rem;
   font-weight: 800;
   color: #1a1a2e;
   line-height: 1;
@@ -66,7 +67,7 @@ body {
 }
 
 .stat-card .stat-sub {
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   color: #6c47ff;
   font-weight: 500;
   margin-top: 2px;
@@ -241,5 +242,13 @@ body {
   }
   .note-card-footer {
     font-size: 0.65rem;
+  }
+}
+
+@media (min-width: 600px) {
+  .stats-grid {
+    flex-direction: row;
+    justify-content: center;
+    gap: 24px;
   }
 }

@@ -1,0 +1,63 @@
+.edit-note-page {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 32px 16px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(108,71,255,0.08);
+}
+
+.edit-note-page h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #6c47ff;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.edit-note-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-group label {
+  font-weight: 600;
+  color: #333;
+}
+
+.input-group input,
+.input-group textarea {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+  border-color: #6c47ff;
+}
+
+.save-btn {
+  background: #43a047;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.save-btn:hover {
+  background: #388e3c;
+}

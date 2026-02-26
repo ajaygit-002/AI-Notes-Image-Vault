@@ -7,6 +7,7 @@ import ComponentsPage from './pages/components/Components.jsx';
 import CreateNote from './pages/createNote/CreateNote.jsx';
 import Dashboard from './pages/dashboard/Dashboard.jsx';
 import Profile from './pages/profile/Profile.jsx';
+import EditNote from './pages/editNote/EditNote';
 
 import Layout from './components/layout/Layout.jsx';
 import { BrowserRouter, Routes, Route, useNavigate, Navigate } from 'react-router-dom';
@@ -36,6 +37,7 @@ function App() {
                   <Route path="/notes" element={<Notes />} />
                   <Route path="/tags/:tag" element={<Notes />} />
                   <Route path="/notes/create" element={<CreateNote />} />
+                  <Route path="/notes/edit/:id" element={<EditNote />} />
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/components" element={<ComponentsPage />} />
                 </Routes>
