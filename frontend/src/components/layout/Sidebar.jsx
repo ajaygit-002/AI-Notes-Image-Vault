@@ -31,6 +31,9 @@ function Sidebar({ isOpen, toggleSidebar }) {
             <li className={location.pathname.startsWith('/notes') ? 'active' : ''} onClick={() => { navigate('/notes'); toggleSidebar(); }}>
               📄 All Notes
             </li>
+            <li className={location.pathname === '/vault' ? 'active' : ''} onClick={() => { navigate('/vault'); toggleSidebar(); }}>
+              🖼️ Image Vault
+            </li>
           </ul>
         </nav>
         <div className="sidebar-footer">

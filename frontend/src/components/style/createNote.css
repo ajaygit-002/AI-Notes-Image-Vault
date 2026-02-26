@@ -21,6 +21,18 @@
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
+  background: #fff;
+  color: #000;
+}
+
+/* dark mode */
+@media (prefers-color-scheme: dark) {
+  .input-field,
+  .textarea-field {
+    background: #222;
+    color: #fff;
+    border: 1px solid #444;
+  }
 }
 
 .textarea-field {

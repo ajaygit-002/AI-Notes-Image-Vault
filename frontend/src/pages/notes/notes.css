@@ -14,6 +14,46 @@
   padding: 0;
 }
 
+/* dark mode adjustments triggered by theme toggle or system preference */
+body.dark-mode .notes-page {
+  background: #121212;
+  color: #eee;
+}
+body.dark-mode .notes-container {
+  background: none;
+}
+body.dark-mode .note-card {
+  background: #333;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  border-bottom: 1px solid #444;
+}
+body.dark-mode .note-title,
+body.dark-mode .note-content,
+body.dark-mode .note-date {
+  color: #fff;
+}
+
+/* ensure light mode forces white backgrounds even if system prefers dark */
+body:not(.dark-mode) .notes-page {
+  background: #fff;
+  color: #000; /* base text black */
+}
+body:not(.dark-mode) .notes-container {
+  background: none;
+}
+body:not(.dark-mode) .note-card {
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border-bottom: 1px solid #f0f0f7;
+}
+body:not(.dark-mode) .note-title {
+  color: #6c47ff; /* blue title in light mode */
+}
+body:not(.dark-mode) .note-content,
+body:not(.dark-mode) .note-date {
+  color: #000; /* ensure other text elements are black */
+}
+
 .note-card {
   background: #fff;
   border-radius: 14px;

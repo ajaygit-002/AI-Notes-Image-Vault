@@ -21,10 +21,18 @@ export default function Dashboard() {
   const [weeklyCount, setWeeklyCount] = useState(null);
   const [tagsCount, setTagsCount] = useState(null);
   const [error, setError] = useState(null);
+  const [vaultError, setVaultError] = useState(null);
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
   useEffect(() => {
+    // check for any upload error passed from vault page
+    const stored = localStorage.getItem('vaultUploadError');
+    if (stored) {
+      setVaultError(stored);
+      localStorage.removeItem('vaultUploadError');
+    }
+
     const fetchStats = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -112,6 +120,9 @@ export default function Dashboard() {
           <h1 className="page-heading">Dashboard</h1>
           <p className="page-subheading">Welcome back! Here's an overview of your workspace.</p>
 
+          {vaultError && (
+            <div className="error-msg">⚠ {vaultError}</div>
+          )}
           {error && (
             <div className="error-msg">⚠ {error} — showing sample data.</div>
           )}

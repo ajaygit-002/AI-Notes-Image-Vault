@@ -8,6 +8,8 @@ import CreateNote from './pages/createNote/CreateNote.jsx';
 import Dashboard from './pages/dashboard/Dashboard.jsx';
 import Profile from './pages/profile/Profile.jsx';
 import EditNote from './pages/editNote/EditNote';
+import ImageVault from './pages/imageVault/ImageVault.jsx';
+import ImageView from './pages/imageVault/ImageView.jsx';
 
 import Layout from './components/layout/Layout.jsx';
 import { BrowserRouter, Routes, Route, useNavigate, Navigate } from 'react-router-dom';
@@ -39,6 +41,8 @@ function App() {
                   <Route path="/notes/create" element={<CreateNote />} />
                   <Route path="/notes/edit/:id" element={<EditNote />} />
                   <Route path="/profile" element={<Profile />} />
+                  <Route path="/vault" element={<ImageVault />} />
+                  <Route path="/vault/:id" element={<ImageView />} />
                   <Route path="/components" element={<ComponentsPage />} />
                 </Routes>
               </Layout>

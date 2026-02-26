@@ -4,13 +4,20 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* default to light palette; app toggle or media query will override */
+  color: #213547;
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* if the user explicitly chooses light mode via the toggle, always use light base */
+body:not(.dark-mode) {
+  background-color: #ffffff;
+  color: #213547;
 }
 
 a {
@@ -55,15 +62,20 @@ button:focus-visible {
 }
 
 @media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
+  /* prefers light already matches our default, so nothing special needed */
   a:hover {
     color: #747bff;
   }
   button {
     background-color: #f9f9f9;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  /* system dark preference should use a darker root palette, but user toggle has priority */
+  :root {
+    color: #f5f7fb;
+    background-color: #242424;
   }
 }
 
@@ -109,4 +121,11 @@ body.dark-mode .note-card-header h3 {
 /* dashboard chart title legibility */
 body.dark-mode .chart-card h2 {
   color: #f5f7fb;
+}
+
+/* make every UI element the same color in dark mode */
+body.dark-mode * {
+  background-color: #2a2a3c !important;
+  color: #eee !important;
+  border-color: #444 !important;
 }

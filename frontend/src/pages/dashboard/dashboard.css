@@ -11,7 +11,7 @@ body {
 
 .page-body {
   flex: 1;
-  padding: 40px 24px;
+  padding: 60px 24px; /* give space for sticky header height */
   overflow-y: auto;
   max-width: 1200px;
   margin: 0 auto;
@@ -22,9 +22,10 @@ body {
 
 .stats-grid {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 18px;
-  align-items: center;
+  justify-content: center;
   width: 100%;
   margin-bottom: 28px;
 }

@@ -1,0 +1,165 @@
+.vault-page {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 32px 16px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(108,71,255,0.08);
+}
+
+/* dark mode support */
+body.dark-mode .vault-page {
+  background: #333;
+  color: #eee;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+}
+
+.vault-page h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #6c47ff;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.vault-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-field {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+  background: #fff;
+  color: #222;
+}
+
+body.dark-mode .input-field {
+  background: #fff;
+  color: #000;
+  border: 1px solid #ccc;
+}
+
+.input-field:focus {
+  border-color: #6c47ff;
+}
+
+.submit-btn {
+  background: #43a047;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.submit-btn:hover {
+  background: #388e3c;
+}
+
+/* keep upload/enter buttons green even when dark-mode * rule applies */
+body.dark-mode .vault-page .submit-btn {
+  background: #43a047 !important;
+  color: #fff !important;
+}
+body.dark-mode .vault-page .submit-btn:hover {
+  background: #388e3c !important;
+}
+
+.vault-error {
+  color: red;
+  margin-top: 16px;
+}
+
+.vault-message {
+  color: green;
+  margin-top: 16px;
+}
+
+.vault-gallery {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 16px;
+}
+.vault-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+.vault-item img {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.vault-item-name {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  text-align: center;
+  word-break: break-all;
+}
+
+/* view page */
+.vault-item-page h1 {
+  font-size: 1.4rem;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.vault-item-container {
+  display: flex;
+  justify-content: center;
+}
+.vault-item-container img {
+  max-width: 90%;
+  max-height: 80vh;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+@media (max-width: 768px) {
+  .vault-page {
+    padding: 24px 12px;
+    max-width: 100%;
+  }
+  .vault-page h1 {
+    font-size: 1.3rem;
+    margin-bottom: 18px;
+  }
+  .input-field {
+    font-size: 0.95rem;
+  }
+  .submit-btn {
+    font-size: 1rem;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .vault-page {
+    padding: 16px 8px;
+  }
+  .vault-page h1 {
+    font-size: 1.1rem;
+  }
+  .input-field {
+    font-size: 0.9rem;
+  }
+  .submit-btn {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+}

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import "../style/navbar.css";
 
-function TopNavbar() {
+function TopNavbar({ toggleSidebar }) {
   const [dark, setDark] = useState(
     () => localStorage.getItem('theme') === 'dark'
   );
@@ -27,6 +27,13 @@ function TopNavbar() {
 
   return (
     <header className="top-navbar simple">
+      <button
+        className="menu-btn"
+        aria-label="Open menu"
+        onClick={toggleSidebar}
+      >
+        ☰
+      </button>
       <div className="title">
         AI Notes & Image Vault
         {stickerUrl && <img src={stickerUrl} alt="AI sticker" style={{marginLeft:'8px',verticalAlign:'middle'}} />}

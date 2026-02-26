@@ -36,8 +36,13 @@ const UserModel = mongoose.model("User", userSchema);
 // Routes
 const authRoutes = require('./routes/authRoutes');
 const noteRoutes = require('./routes/noteRoutes');
+const vaultRoutes = require('./routes/vaultRoutes');
 app.use(authRoutes);
 app.use('/api/notes', noteRoutes);
+app.use('/api/vault', vaultRoutes);
+// expose uploaded files for manual inspection if needed
+app.use('/uploads', express.static('uploads'));
+
 app.get("/", (req, res) => {
   res.send("AI Notes & Image Vault Backend Running 🚀");
 });
