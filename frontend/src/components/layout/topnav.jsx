@@ -1,39 +1,43 @@
 // src/components/layout/TopNavbar.jsx
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../style/navbar.css";
 
-function TopNavbar({ toggleSidebar }) {
-  const email = localStorage.getItem('userEmail') || '';
-  // derive initials from email prefix
-  const initials = email
-    ? email
-        .split('@')[0]
-        .split(/[._]/)
-        .map(n => n[0]?.toUpperCase())
-        .join('')
-    : 'U';
+function TopNavbar() {
+  const [dark, setDark] = useState(
+    () => localStorage.getItem('theme') === 'dark'
+  );
+  const [stickerUrl, setStickerUrl] = useState(null);
+
+  useEffect(() => {
+    document.body.classList.toggle('dark-mode', dark);
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+  }, [dark]);
+
+  // check for sticker flag when component mounts
+  useEffect(() => {
+    if (localStorage.getItem('showSticker') === 'true') {
+      // generate/choose a URL for AI sticker; using placeholder for demo
+      setStickerUrl('https://via.placeholder.com/32?text=🤖');
+      localStorage.removeItem('showSticker');
+
+      // clear sticker after a few seconds automatically
+      setTimeout(() => setStickerUrl(null), 5000);
+    }
+  }, []);
 
   return (
-    <header className="top-navbar">
-      <div className="left-section">
-        <button className="menu-btn" onClick={toggleSidebar}>
-          ☰
-        </button>
-        <div className="logo">
-          <div className="logo-circle">AI</div>
-          <span>AI Notes & Image Vault</span>
-        </div>
+    <header className="top-navbar simple">
+      <div className="title">
+        AI Notes & Image Vault
+        {stickerUrl && <img src={stickerUrl} alt="AI sticker" style={{marginLeft:'8px',verticalAlign:'middle'}} />}
       </div>
-
-      <div className="search-bar">
-        <input type="text" placeholder="Search notes..." />
-      </div>
-
-      <div className="right-section">
-        <button className="icon-btn">🌙</button>
-        <div className="avatar">{initials}</div>
-        <span className="username">{email}</span>
-      </div>
+      <button
+        className="theme-btn"
+        aria-label="Toggle light/dark mode"
+        onClick={() => setDark(d => !d)}
+      >
+        {dark ? '☀️' : '🌙'}
+      </button>
     </header>
   );
 }

@@ -66,3 +66,47 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* explicit dark-mode overrides triggered by body.dark-mode */
+body.dark-mode {
+  background-color: #1a1a2e;
+  color: #f5f7fb;
+}
+body.dark-mode .sidebar {
+  background: #2c2c44;
+  border-right: 1px solid #444;
+}
+body.dark-mode .sidebar nav ul li {
+  color: #ccc;
+}
+body.dark-mode .sidebar nav ul li:hover,
+body.dark-mode .sidebar nav ul li.active {
+  background: #3a3a5a;
+  color: #fff;
+}
+body.dark-mode .main-content,
+body.dark-mode .page-body {
+  background: #1a1a2e;
+  color: #ddd;
+}
+body.dark-mode .stat-card,
+body.dark-mode .note-card,
+body.dark-mode .chart-card {
+  background: #2a2a3c;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+body.dark-mode .stat-card .stat-label,
+body.dark-mode .note-card-excerpt,
+body.dark-mode .note-card-footer {
+  color: #aaa;
+}
+body.dark-mode .stat-card .stat-value,
+body.dark-mode .stat-card .stat-sub,
+body.dark-mode .note-card-header h3 {
+  color: #fff;
+}
+
+/* dashboard chart title legibility */
+body.dark-mode .chart-card h2 {
+  color: #f5f7fb;
+}

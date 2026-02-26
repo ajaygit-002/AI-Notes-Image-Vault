@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import "./style/login.css";
 
 function Login({ onLogin }) {
@@ -84,7 +85,9 @@ function Login({ onLogin }) {
               <div>
                 <input type="checkbox" /> Remember me
               </div>
-              <a href="#">Forgot password</a>
+              <Link to="/forgot-password" style={{ color: '#1976d2', textDecoration: 'none' }}>
+                Forgot password
+              </Link>
             </div>
 
             <button className="login-btn" type="submit" disabled={loading}>

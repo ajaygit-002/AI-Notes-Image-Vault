@@ -15,10 +15,20 @@ exports.createNote = async (req, res) => {
   }
 };
 
-// Get All Notes (Only Logged In User)
+// Get All Notes (Only Logged In User) with optional tag filter
 exports.getNotes = async (req, res) => {
   try {
-    const notes = await Note.find({ user: req.user._id });
+    const filter = { user: req.user._id };
+    if (req.query.tag) {
+      // simple case-insensitive hashtag match in title or content
+      const tag = req.query.tag.toLowerCase();
+      const regex = new RegExp(`#${tag}\b`, 'i');
+      filter.$or = [
+        { title: regex },
+        { content: regex }
+      ];
+    }
+    const notes = await Note.find(filter).sort({ createdAt: -1 });
     res.json(notes);
   } catch (err) {
     res.status(500).json({ error: err.message });

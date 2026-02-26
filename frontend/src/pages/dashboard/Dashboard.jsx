@@ -15,25 +15,6 @@ const IconTrash = () => (
   </svg>
 );
 
-// ── Sample recent notes (replace with real API data) ───
-const SAMPLE_NOTES = [
-  {
-    id: 1, title: "Project Ideas for Q1 2026",
-    excerpt: "Brainstorming session notes for upcoming projects. Focus on AI integration and user experience improvements...",
-    tags: ["Work", "Projects"], date: "Feb 20, 2026",
-  },
-  {
-    id: 2, title: "Meeting Notes - Design Review",
-    excerpt: "Discussed the new dashboard layout and glassmorphism design patterns. Team agreed on indigo color scheme...",
-    tags: ["Work", "Design"], date: "Feb 22, 2026",
-  },
-  {
-    id: 3, title: "Travel Plans - Summer 2026",
-    excerpt: "Planning trip to Japan. Research destinations, book hotels, and create itinerary. Don't forget to check visa requirements...",
-    tags: ["Personal", "Travel"], date: "Feb 23, 2026",
-  },
-];
-
 // ── Dashboard Component ────────────────────────────────
 export default function Dashboard() {
   const [noteCount, setNoteCount] = useState(null);
@@ -160,32 +141,6 @@ export default function Dashboard() {
             <div className="chart-wrapper">
               <canvas ref={chartRef} />
             </div>
-          </div>
-
-          {/* Recent Notes */}
-          <div className="section-header">
-            <h2>Recent Notes</h2>
-            <a href="/notes">View all →</a>
-          </div>
-          <div className="notes-grid">
-            {SAMPLE_NOTES.map((note) => (
-              <div className="note-card" key={note.id}>
-                <div className="note-card-header">
-                  <h3>{note.title}</h3>
-                  <div className="note-card-actions">
-                    <button title="Edit"><IconEdit /></button>
-                    <button title="Delete"><IconTrash /></button>
-                  </div>
-                </div>
-                <p className="note-card-excerpt">{note.excerpt}</p>
-                <div className="note-tags">
-                  {note.tags.map((t) => <span className="tag" key={t}>{t}</span>)}
-                </div>
-                <div className="note-card-footer">
-                  <span>{note.date}</span>
-                </div>
-              </div>
-            ))}
           </div>
     </div>
   );

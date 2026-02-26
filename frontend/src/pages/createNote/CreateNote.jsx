@@ -33,6 +33,8 @@ function CreateNote() {
       if (!res.ok) {
         throw new Error(data.message || `Error ${res.status}`);
       }
+      // signal navbar to show AI sticker next time it renders
+      localStorage.setItem('showSticker','true');
       navigate('/notes');
     } catch (err) {
       console.error(err);

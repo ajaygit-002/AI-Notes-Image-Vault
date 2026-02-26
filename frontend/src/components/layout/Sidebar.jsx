@@ -23,7 +23,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
           + Create Note
         </button>
 
-        <nav>
+        <nav className="sidebar-nav-main">
           <ul>
             <li className={location.pathname === '/' ? 'active' : ''} onClick={() => { navigate('/'); toggleSidebar(); }}>
               🏠 Dashboard
@@ -31,21 +31,13 @@ function Sidebar({ isOpen, toggleSidebar }) {
             <li className={location.pathname.startsWith('/notes') ? 'active' : ''} onClick={() => { navigate('/notes'); toggleSidebar(); }}>
               📄 All Notes
             </li>
-            <li className={location.pathname === '/profile' ? 'active' : ''} onClick={() => { navigate('/profile'); toggleSidebar(); }}>
-              👤 Profile
-            </li>
           </ul>
-
-          <div className="tags-section">
-            <p>Tags</p>
-            <ul>
-              <li># Work</li>
-              <li># Personal</li>
-              <li># Ideas</li>
-              <li># Projects</li>
-            </ul>
-          </div>
         </nav>
+        <div className="sidebar-footer">
+          <button className={location.pathname === '/profile' ? 'active' : ''} onClick={() => { navigate('/profile'); toggleSidebar(); }}>
+            👤 Profile
+          </button>
+        </div>
       </aside>
     </>
   );

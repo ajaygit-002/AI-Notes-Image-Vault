@@ -12,6 +12,8 @@
   padding: 25px 20px;
   transition: all 0.3s ease;
   z-index: 999;
+  display: flex;              /* ensure footer placement works */
+  flex-direction: column;
 }
 
 /* Create Button */
@@ -35,6 +37,11 @@
 }
 
 /* Nav Items */
+.sidebar nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 .sidebar nav ul li {
   padding: 12px 10px;
   border-radius: 8px;
@@ -55,20 +62,37 @@
   font-weight: 600;
 }
 
-/* Tags Section */
-.tags-section {
-  margin-top: 30px;
-}
-
-.tags-section p {
-  font-size: 13px;
-  color: #999;
-  margin-bottom: 10px;
-}
 
 /* Overlay */
 .sidebar-overlay {
   display: none;
+}
+
+/* Footer */
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+  /* keep at bottom regardless of content */
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+}
+.sidebar-footer button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+  color: #555;
+  transition: 0.2s;
+}
+.sidebar-footer button.active,
+.sidebar-footer button:hover {
+  background: #ebeaff;
+  color: #6c63ff;
 }
 
 /* Tablet */

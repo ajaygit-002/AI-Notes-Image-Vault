@@ -6,11 +6,11 @@
 
 /* Main content area */
 .main-content {
-  margin-top: 70px;        /* height of navbar */
+  margin-top: 50px; /* height of thin navbar */
   margin-left: 260px;     /* width of sidebar */
   padding: 30px;
   transition: all 0.3s ease;
-  min-height: calc(100vh - 70px);
+  min-height: calc(100vh - 50px);
 }
 
 /* Tablet */
