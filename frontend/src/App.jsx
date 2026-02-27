@@ -26,6 +26,9 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginWrapper />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        {/* accept token as route param for reset page */}
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        {/* legacy query param support, optional */}
         <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* protected routes wrapped in layout and require auth */}

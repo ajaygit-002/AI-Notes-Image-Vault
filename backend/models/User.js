@@ -7,6 +7,8 @@ const userSchema = new mongoose.Schema({
   // fields used for password reset flow
   resetPasswordToken: String,
   resetPasswordExpires: Date
+},{
+  timestamps: true // adds createdAt & updatedAt
 });
 
 module.exports = mongoose.models.User || mongoose.model('User', userSchema);

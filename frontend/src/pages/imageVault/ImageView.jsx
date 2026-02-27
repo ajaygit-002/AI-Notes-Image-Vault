@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { parseJSON } from '../../utils/api';
 import '../../components/style/imageVault.css';
 
 function ImageView() {
@@ -15,7 +16,7 @@ function ImageView() {
         const res = await fetch(`http://localhost:5000/api/vault/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        const data = await res.json();
+        const data = await parseJSON(res);
         if (!res.ok) throw new Error(data.error || 'Unable to load item');
         setItem(data);
       } catch (err) {

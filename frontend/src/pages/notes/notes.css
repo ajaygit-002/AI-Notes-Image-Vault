@@ -2,16 +2,48 @@
   max-width: 900px;
   margin: 0 auto;
   padding: 24px 12px;
+  /* make notes page itself scrollable with smooth behaviour */
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+/* custom scrollbar for notes page */
+.notes-page::-webkit-scrollbar {
+  width: 6px;
+}
+.notes-page::-webkit-scrollbar-track {
+  background: transparent;
+}
+.notes-page::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 3px;
 }
 
 .notes-container {
   display: flex;
-  flex-direction: column;
+  /* row layout so notes flow horizontally and wrap to new lines */
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 16px;
   background: none;
   border-radius: 0;
   box-shadow: none;
   padding: 0;
+  /* allow container itself to scroll if content exceeds page height */
+  overflow-y: auto;
+}
+
+/* ensure each card doesn't grow too wide when wrapping */
+.note-card {
+  flex: 1 1 calc(50% - 16px);
+  max-width: calc(50% - 16px);
+}
+
+@media (max-width: 600px) {
+  .note-card {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
 }
 
 /* dark mode adjustments triggered by theme toggle or system preference */
@@ -32,6 +64,8 @@ body.dark-mode .note-content,
 body.dark-mode .note-date {
   color: #fff;
 }
+
+/* dark mode button colors */
 
 /* ensure light mode forces white backgrounds even if system prefers dark */
 body:not(.dark-mode) .notes-page {
@@ -134,4 +168,20 @@ body:not(.dark-mode) .note-date {
     text-align: left;
     font-size: 1rem;
   }
+}
+
+/* dark-mode button overrides moved to bottom to override base styles */
+body.dark-mode .note-edit-btn {
+  background: #4a8cff !important; /* enforce blue */
+  color: #fff !important;
+}
+body.dark-mode .note-edit-btn:hover {
+  background: #3a76e0 !important;
+}
+body.dark-mode .note-delete-btn {
+  background: #ff6b6b !important; /* enforce red */
+  color: #fff !important;
+}
+body.dark-mode .note-delete-btn:hover {
+  background: #e05555 !important;
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { parseJSON } from '../../utils/api';
 import '../../components/style/imageVault.css';
 
 function ImageVault() {
@@ -27,7 +28,7 @@ function ImageVault() {
   const loadItems = async () => {
     try {
       const res = await fetch('http://localhost:5000/api/vault');
-      const data = await res.json();
+      const data = await parseJSON(res);
       if (res.ok) {
         setItems(data);
       }
@@ -62,7 +63,7 @@ function ImageVault() {
         body: formData,
       });
 
-      const data = await res.json();
+      const data = await parseJSON(res);
       if (!res.ok) {
         throw new Error(data.error || 'Upload failed');
       }

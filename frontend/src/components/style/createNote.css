@@ -25,14 +25,19 @@
   color: #000;
 }
 
-/* dark mode */
-@media (prefers-color-scheme: dark) {
-  .input-field,
-  .textarea-field {
-    background: #222;
-    color: #fff;
-    border: 1px solid #444;
-  }
+/* explicit light / dark mode overrides to avoid global !important rule conflicts */
+body:not(.dark-mode) .input-field,
+body:not(.dark-mode) .textarea-field {
+  background: #fff;
+  color: #000;
+  border: 1px solid #ccc;
+}
+
+body.dark-mode .input-field,
+body.dark-mode .textarea-field {
+  background: #222 !important;
+  color: #fff !important;
+  border: 1px solid #444 !important;
 }
 
 .textarea-field {

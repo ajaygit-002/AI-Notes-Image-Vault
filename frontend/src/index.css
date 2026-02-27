@@ -14,6 +14,11 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* make sure root and body occupy full viewport */
+html, body {
+  height: 100%;
+}
+
 /* if the user explicitly chooses light mode via the toggle, always use light base */
 body:not(.dark-mode) {
   background-color: #ffffff;
@@ -32,7 +37,10 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  /* fill the viewport and prevent whole-page vertical scrolling */
+  overflow-y: hidden;
+  align-items: stretch;
+  justify-content: flex-start;
   min-width: 320px;
   min-height: 100vh;
 }

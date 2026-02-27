@@ -20,7 +20,7 @@ function EditNote() {
             Authorization: `Bearer ${token}`,
           },
         });
-        const notes = await res.json();
+        const notes = await parseJSON(res);
         const note = notes.find(n => n._id === id);
         if (!note) throw new Error('Note not found');
         setTitle(note.title);
@@ -46,7 +46,7 @@ function EditNote() {
         },
         body: JSON.stringify({ title, content }),
       });
-      const data = await res.json();
+      const data = await parseJSON(res);
       if (!res.ok) throw new Error(data.message || 'Save failed');
       navigate('/notes');
     } catch (err) {

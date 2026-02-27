@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { parseJSON } from '../../utils/api';
 import './notes.css';
 
 function Notes() {
@@ -27,7 +28,7 @@ function Notes() {
           },
         });
         if (res.status === 401) { window.location.href = '/login'; return; }
-        const data = await res.json();
+        const data = await parseJSON(res);
         if (!res.ok) throw new Error(data.message || 'Failed to load notes');
         setNotes(data);
       } catch (err) {
@@ -48,7 +49,7 @@ function Notes() {
           Authorization: `Bearer ${token}`,
         },
       });
-      const data = await res.json();
+      const data = await parseJSON(res);
       if (!res.ok) throw new Error(data.message || 'Delete failed');
       setNotes(notes.filter(n => n._id !== id));
     } catch (err) {
@@ -70,7 +71,7 @@ function Notes() {
         },
         body: JSON.stringify({ title: newTitle, content: newContent }),
       });
-      const data = await res.json();
+      const data = await parseJSON(res);
       if (!res.ok) throw new Error(data.message || 'Edit failed');
       setNotes(notes.map(n => n._id === id ? data : n));
     } catch (err) {

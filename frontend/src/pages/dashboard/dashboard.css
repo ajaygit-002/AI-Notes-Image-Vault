@@ -11,10 +11,27 @@ body {
 
 .page-body {
   flex: 1;
-  padding: 60px 24px; /* give space for sticky header height */
-  overflow-y: auto;
+  /* occupy full height of main-content (which already accounts for navbar) */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 24px;
+  /* remove external scrolling; chart-card handles its own overflow */
+  overflow: hidden;
   max-width: 1200px;
   margin: 0 auto;
+}
+
+/* custom scrollbar for dashboard body */
+.page-body::-webkit-scrollbar {
+  width: 6px;
+}
+.page-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+.page-body::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 3px;
 }
 
 .page-heading { font-size: 1.9rem; font-weight: 800; margin-bottom: 4px; text-align: center; }
@@ -27,7 +44,7 @@ body {
   gap: 18px;
   justify-content: center;
   width: 100%;
-  margin-bottom: 28px;
+  margin-bottom: 20px;
 }
 
 .stat-card {
@@ -76,9 +93,35 @@ body {
 }
 
 
-.chart-card { width: 100%; margin-top: 50px; padding: 30px; border-radius: 20px; background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-.chart-card h2 { margin-bottom: 20px; color: #1a1a2e; font-weight: 700; font-size: 1.1rem; text-align: center; }
-.chart-wrapper { height: 300px; min-width: 0; width: 100%; box-sizing: border-box; }
+.chart-card {
+  width: 100%;
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+
+  /* make card grow to fill available space and scroll internally */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  min-height: 0; /* allow flex child to shrink */
+}
+.chart-card h2 {
+  margin-bottom: 16px;
+  color: #1a1a2e;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-align: center;
+}
+.chart-wrapper {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  height: 100%;
+}
 
 .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 .section-header h2 { font-size: 1.1rem; font-weight: 700; }

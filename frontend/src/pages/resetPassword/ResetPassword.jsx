@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { useNavigate, useSearchParams, Link } from "react-router-dom";
+import { useNavigate, useSearchParams, useParams, Link } from "react-router-dom";
+import { parseJSON } from '../../utils/api';
 import "../login/style/login.css"; // reuse login styles
 
 function ResetPassword() {
   const [searchParams] = useSearchParams();
-  const token = searchParams.get("token");
+  const { token: paramToken } = useParams();
+  const token = paramToken || searchParams.get("token");
   const navigate = useNavigate();
 
   const [password, setPassword] = useState("");
@@ -12,21 +14,52 @@ function ResetPassword() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [validToken, setValidToken] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   // always show form; backend handles token validity
   // if the token is missing we will redirect back to forgot-password quickly
+
   React.useEffect(() => {
     if (!token) {
       setError("Token not provided in URL");
-      // give user a moment to see the message and then send them back
       const t = setTimeout(() => {
         navigate('/forgot-password');
       }, 1500);
       return () => clearTimeout(t);
     }
+
+    // verify token with backend before showing form
+    const check = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/auth/verify-reset-token", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token }),
+        });
+        const data = await parseJSON(res);
+        if (data.valid) {
+          setValidToken(true);
+        } else {
+          setError("Password reset link is invalid or has expired.");
+          setValidToken(false);
+          setTimeout(() => navigate('/forgot-password'), 1500);
+        }
+      } catch (err) {
+        console.error("token check failed", err);
+        setError("Unable to verify reset link. Please try again.");
+      }
+    };
+    check();
   }, [token, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!token) {
+      setError("Invalid request – missing token. Redirecting...");
+      setTimeout(() => navigate('/forgot-password'), 1500);
+      return;
+    }
     if (password !== confirm) {
       setError("Passwords do not match");
       return;
@@ -35,25 +68,18 @@ function ResetPassword() {
     setMessage("");
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/reset-password", {
+      const res = await fetch(`http://localhost:5000/api/auth/reset-password/${token}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, password }),
+        body: JSON.stringify({ newPassword: password, confirmPassword: confirm }),
       });
-      const data = await res.json();
+      const data = await parseJSON(res);
       if (!res.ok) throw new Error(data.message || "Request failed");
-      // show which account was updated so user can verify
-      if (data.user && data.user.email) {
-        setMessage(`Password for ${data.user.email} updated. Redirecting to login...`);
-      } else {
-        setMessage("Password updated. Redirecting to login...");
-      }
-      console.log('reset response', data);
+      setMessage("Password updated successfully. Redirecting to login...");
       setTimeout(() => navigate("/login"), 2500);
     } catch (err) {
       const msg = err.message || '';
       setError(msg);
-      // if backend says the token is bad, send user back to request a new link
       if (msg.toLowerCase().includes('invalid') || msg.toLowerCase().includes('expired')) {
         setTimeout(() => {
           navigate('/forgot-password');
@@ -94,32 +120,59 @@ function ResetPassword() {
               tabIndex={-1}
               aria-hidden="true"
             />
-            <div className="input-group">
+            <div className="input-group" style={{ position: 'relative' }}>
               <label htmlFor="password-input">New Password</label>
               <input
                 id="password-input"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
+                className="password-input"
                 placeholder="Enter new password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="new-password"
                 required
               />
+              <span
+                className="toggle-password-eye"
+                onClick={() => setShowPassword(p => !p)}
+              >{showPassword ? '🙈' : '👁️'}</span>
+              {password && password.length < 6 && (
+                <div style={{ color: 'red', fontSize: '0.8rem' }}>
+                  Password must be at least 6 characters
+                </div>
+              )}
             </div>
-            <div className="input-group">
+            <div className="input-group" style={{ position: 'relative' }}>
               <label htmlFor="confirm-input">Confirm Password</label>
               <input
                 id="confirm-input"
-                type="password"
+                type={showConfirm ? 'text' : 'password'}
+                className="password-input"
                 placeholder="Confirm new password"
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
                 autoComplete="new-password"
                 required
               />
+              <span
+                className="toggle-password-eye"
+                onClick={() => setShowConfirm(p => !p)}
+              >{showConfirm ? '🙈' : '👁️'}</span>
+              {confirm && password !== confirm && (
+                <div style={{ color: 'red', fontSize: '0.8rem' }}>
+                  Passwords do not match
+                </div>
+              )}
             </div>
 
-            <button className="login-btn" type="submit" disabled={loading}>
+                  <button
+              className="login-btn"
+              type="submit"
+              disabled={
+                loading || !token || !validToken ||
+                password.length < 6 || password !== confirm
+              }
+            >
               {loading ? "Updating..." : "Set Password"}
             </button>
           </form>

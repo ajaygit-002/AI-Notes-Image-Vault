@@ -37,7 +37,8 @@ const UserModel = mongoose.model("User", userSchema);
 const authRoutes = require('./routes/authRoutes');
 const noteRoutes = require('./routes/noteRoutes');
 const vaultRoutes = require('./routes/vaultRoutes');
-app.use(authRoutes);
+// mount auth routes under /api/auth
+app.use('/api/auth', authRoutes);
 app.use('/api/notes', noteRoutes);
 app.use('/api/vault', vaultRoutes);
 // expose uploaded files for manual inspection if needed

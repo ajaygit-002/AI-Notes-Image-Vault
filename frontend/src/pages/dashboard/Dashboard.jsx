@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { parseJSON } from '../../utils/api';
 import Chart from "chart.js/auto";
 import "./dashboard.css"; // adjust import path as needed
 
@@ -47,7 +48,7 @@ export default function Dashboard() {
           const text = await res.text();
           throw new Error(`Failed to load stats (${res.status}): ${text || res.statusText}`);
         }
-        const data = await res.json();
+        const data = await parseJSON(res);
         setNoteCount(data.total);
         setWeeklyCount(data.weekly);
         setTagsCount(data.tags ?? 5);

@@ -1,7 +1,9 @@
 .app-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  /* confine entire app to viewport, no outer scrolling */
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* Main content area */
@@ -10,7 +12,11 @@
   margin-left: 260px;     /* width of sidebar */
   padding: 30px;
   transition: all 0.3s ease;
-  min-height: calc(100vh - 50px);
+  /* fill remaining viewport height beneath navbar and prevent overflow */
+  height: calc(100vh - 50px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Tablet */

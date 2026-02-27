@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { parseJSON } from '../../utils/api';
 import "../login/style/login.css"; // reuse login styles
 
 function ForgotPassword() {
@@ -15,23 +16,15 @@ function ForgotPassword() {
     setMessage("");
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/forgot-password", {
+      const res = await fetch("http://localhost:5000/api/auth/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-      const data = await res.json();
+      const data = await parseJSON(res);
       if (!res.ok) throw new Error(data.message || "Request failed");
-      setMessage(
-        "If an account with that email exists, a reset link was generated."
-      );
-      // for demo show clickable reset link
+      setMessage("Reset link sent to your email.");
       if (data.resetLink) {
-        setMessage(
-          "If you're testing locally you can visit the link below:\n" +
-            data.resetLink
-        );
-        // also set a separate state for link so we can render anchor
         setResetLink(data.resetLink);
       }
     } catch (err) {
