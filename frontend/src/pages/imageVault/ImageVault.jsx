@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { parseJSON } from '../../utils/api';
 import '../../components/style/imageVault.css';
+import { isVaultAuthorized, setVaultAuthorized } from '../../utils/vaultAuth';
 
 function ImageVault() {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ function ImageVault() {
   const [file, setFile] = useState(null);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
-  const [authorized, setAuthorized] = useState(false);
+  const [authorized, setAuthorized] = useState(isVaultAuthorized());
   const [items, setItems] = useState([]);
 
   const checkPassword = (e) => {
@@ -18,6 +19,7 @@ function ImageVault() {
     // simple client-side gate; backend will re-check on upload
     if (password === '1234') {
       setAuthorized(true);
+      setVaultAuthorized(true);
       setPassword(''); // clear out the field
     } else {
       setError('Incorrect password');

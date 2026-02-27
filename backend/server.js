@@ -37,10 +37,12 @@ const UserModel = mongoose.model("User", userSchema);
 const authRoutes = require('./routes/authRoutes');
 const noteRoutes = require('./routes/noteRoutes');
 const vaultRoutes = require('./routes/vaultRoutes');
-// mount auth routes under /api/auth
+const suggestCorrections = require('./routes/suggestCorrections');
+// mount routes
 app.use('/api/auth', authRoutes);
 app.use('/api/notes', noteRoutes);
 app.use('/api/vault', vaultRoutes);
+app.use('/api/notes', suggestCorrections);
 // expose uploaded files for manual inspection if needed
 app.use('/uploads', express.static('uploads'));
 

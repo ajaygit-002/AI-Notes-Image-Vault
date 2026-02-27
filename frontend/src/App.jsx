@@ -7,6 +7,7 @@ import ComponentsPage from './pages/components/Components.jsx';
 import CreateNote from './pages/createNote/CreateNote.jsx';
 import Dashboard from './pages/dashboard/Dashboard.jsx';
 import Profile from './pages/profile/Profile.jsx';
+import ChangePassword from './pages/changePassword/ChangePassword.jsx';
 import EditNote from './pages/editNote/EditNote';
 import ImageVault from './pages/imageVault/ImageVault.jsx';
 import ImageView from './pages/imageVault/ImageView.jsx';
@@ -44,6 +45,7 @@ function App() {
                   <Route path="/notes/create" element={<CreateNote />} />
                   <Route path="/notes/edit/:id" element={<EditNote />} />
                   <Route path="/profile" element={<Profile />} />
+                  <Route path="/change-password" element={<ChangePassword />} />
                   <Route path="/vault" element={<ImageVault />} />
                   <Route path="/vault/:id" element={<ImageView />} />
                   <Route path="/components" element={<ComponentsPage />} />

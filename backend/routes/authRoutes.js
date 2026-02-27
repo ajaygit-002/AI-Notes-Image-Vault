@@ -39,27 +39,26 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Forgot password - send reset token link
+// Forgot password - user provides new password directly
 // route: POST /api/auth/forgot-password
 router.post('/forgot-password', async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email, newPassword, confirmPassword } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      // user not found; return 404 so frontend can display appropriate message
       return res.status(404).json({ message: 'Email not registered' });
     }
-
-    // generate plain token and hash it before saving
-    const token = crypto.randomBytes(20).toString('hex');
-    const hashed = await bcrypt.hash(token, 10);
-    user.resetPasswordToken = hashed;
-    user.resetPasswordExpires = Date.now() + 15 * 60 * 1000; // 15 minutes
+    if (!newPassword || newPassword.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters' });
+    }
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ message: 'Passwords do not match' });
+    }
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
     await user.save();
-
-    const resetLink = `http://localhost:5173/reset-password/${token}`;
-    // in a real app you would send the link by email; here we return it for testing
-    res.json({ message: 'Password reset link generated', resetLink });
+    res.json({ message: 'Password has been reset. Please log in with your new password.' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -133,6 +132,31 @@ router.get('/profile', authMiddleware, async (req, res) => {
     const user = await User.findById(req.user._id).select('name email createdAt');
     if (!user) return res.status(404).json({ message: 'User not found' });
     res.json({ user });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Change password for authenticated user
+// route: POST /api/auth/change-password
+router.post('/change-password', authMiddleware, async (req, res) => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+    if (!newPassword || newPassword.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters' });
+    }
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ message: 'Passwords do not match' });
+    }
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const match = await bcrypt.compare(currentPassword, user.password);
+    if (!match) return res.status(400).json({ message: 'Current password is incorrect' });
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+    res.json({ message: 'Password updated successfully' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

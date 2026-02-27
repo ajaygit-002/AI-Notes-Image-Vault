@@ -59,6 +59,46 @@ body.dark-mode .textarea-field {
   background-color: #0056b3;
 }
 
+/* AI suggestion button */
+.ai-btn {
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  background-color: #1976d2; /* match edit button blue */
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+.ai-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* small sticker/badge that appears on click */
+.ai-sticker {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #fff;
+  color: #1967d2;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  transform: scale(0);
+  animation: popIn 260ms ease-out forwards;
+}
+
+@keyframes popIn {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+
 @media (max-width: 480px) {
   .create-note-page {
     padding: 10px;
@@ -68,4 +108,37 @@ body.dark-mode .textarea-field {
   .textarea-field {
     font-size: 0.9rem;
   }
+}
+
+/* Change Password page */
+.change-password-page {
+  max-width: 540px;
+  margin: 24px auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.change-password-page h1 {
+  margin-bottom: 12px;
+  font-size: 1.4rem;
+}
+.change-password-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.change-password-actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+}
+.change-password-actions .ai-btn,
+.change-password-actions .submit-btn {
+  flex: 1 1 auto;
+}
+
+@media (max-width: 600px) {
+  .change-password-page { padding: 12px; }
+  .change-password-actions { flex-direction: column; }
+  .change-password-actions .ai-btn,
+  .change-password-actions .submit-btn { width: 100%; }
 }
