@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const LanguageToolApi = require('languagetool-api');
 
 // POST /api/notes/suggest-corrections
 router.post('/suggest-corrections', async (req, res) => {
