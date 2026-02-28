@@ -1,4 +1,11 @@
 
+/*
+  server.js
+  Main Express server entry for the AI Notes & Image Vault app.
+  - Loads environment, connects to MongoDB, mounts API routes,
+    and serves the uploads static folder.
+  - No runtime behavior is changed by this comment.
+*/
 require("dotenv").config();
 console.log("MONGO_URI from .env:", process.env.MONGO_URI); 
 

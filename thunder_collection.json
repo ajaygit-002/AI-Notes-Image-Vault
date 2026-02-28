@@ -1,0 +1,183 @@
+{
+  "type": "collection",
+  "name": "AI Notes & Image Vault - Localhost",
+  "version": "1.0",
+  "item": [
+    {
+      "name": "Root",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "http://localhost:5000/", "host": ["localhost"], "port": "5000", "path": [""] }
+      }
+    },
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "http://localhost:5000/health", "host": ["localhost"], "port": "5000", "path": ["health"] }
+      }
+    },
+    {
+      "name": "Auth - Register",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Alice\",\n  \"email\": \"alice@example.com\",\n  \"password\": \"secret123\"\n}" },
+        "url": { "raw": "http://localhost:5000/api/auth/register", "host": ["localhost"], "port": "5000", "path": ["api","auth","register"] }
+      }
+    },
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"email\": \"alice@example.com\",\n  \"password\": \"secret123\"\n}" },
+        "url": { "raw": "http://localhost:5000/api/auth/login", "host": ["localhost"], "port": "5000", "path": ["api","auth","login"] }
+      }
+    },
+    {
+      "name": "Auth - Demo Create User",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "http://localhost:5000/api/auth/demo-create-user", "host": ["localhost"], "port": "5000", "path": ["api","auth","demo-create-user"] }
+      }
+    },
+    {
+      "name": "Auth - Forgot (manual reset)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"email\": \"alice@example.com\",\n  \"newPassword\": \"newpass123\",\n  \"confirmPassword\": \"newpass123\"\n}" },
+        "url": { "raw": "http://localhost:5000/api/auth/forgot-password", "host": ["localhost"], "port": "5000", "path": ["api","auth","forgot-password"] }
+      }
+    },
+    {
+      "name": "Auth - Verify Reset Token",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"token\": \"PUT_TOKEN_HERE\"\n}" },
+        "url": { "raw": "http://localhost:5000/api/auth/verify-reset-token", "host": ["localhost"], "port": "5000", "path": ["api","auth","verify-reset-token"] }
+      }
+    },
+    {
+      "name": "Auth - Profile (requires token)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer <TOKEN>" }],
+        "url": { "raw": "http://localhost:5000/api/auth/profile", "host": ["localhost"], "port": "5000", "path": ["api","auth","profile"] }
+      }
+    },
+    {
+      "name": "Auth - Change Password (auth)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer <TOKEN>" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"currentPassword\": \"secret123\",\n  \"newPassword\": \"newpass123\",\n  \"confirmPassword\": \"newpass123\"\n}" },
+        "url": { "raw": "http://localhost:5000/api/auth/change-password", "host": ["localhost"], "port": "5000", "path": ["api","auth","change-password"] }
+      }
+    },
+    {
+      "name": "Notes - Create (auth)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer <TOKEN>" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"title\": \"Test note\",\n  \"content\": \"Hello world\"\n}" },
+        "url": { "raw": "http://localhost:5000/api/notes", "host": ["localhost"], "port": "5000", "path": ["api","notes"] }
+      }
+    },
+    {
+      "name": "Notes - List (auth)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer <TOKEN>" }],
+        "url": { "raw": "http://localhost:5000/api/notes", "host": ["localhost"], "port": "5000", "path": ["api","notes"] }
+      }
+    },
+    {
+      "name": "Notes - Stats (auth)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer <TOKEN>" }],
+        "url": { "raw": "http://localhost:5000/api/notes/stats", "host": ["localhost"], "port": "5000", "path": ["api","notes","stats"] }
+      }
+    },
+    {
+      "name": "Notes - Update (auth)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer <TOKEN>" }
+        ],
+        "body": { "mode": "raw", "raw": "{\n  \"title\": \"Updated\",\n  \"content\": \"New content\"\n}" },
+        "url": { "raw": "http://localhost:5000/api/notes/NOTE_ID", "host": ["localhost"], "port": "5000", "path": ["api","notes","NOTE_ID"] }
+      }
+    },
+    {
+      "name": "Notes - Delete (auth)",
+      "request": {
+        "method": "DELETE",
+        "header": [{ "key": "Authorization", "value": "Bearer <TOKEN>" }],
+        "url": { "raw": "http://localhost:5000/api/notes/NOTE_ID", "host": ["localhost"], "port": "5000", "path": ["api","notes","NOTE_ID"] }
+      }
+    },
+    {
+      "name": "Suggest Corrections",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"text\": \"Ths is a test sentence.\"\n}" },
+        "url": { "raw": "http://localhost:5000/api/notes/suggest-corrections", "host": ["localhost"], "port": "5000", "path": ["api","notes","suggest-corrections"] }
+      }
+    },
+    {
+      "name": "Vault - Upload (multipart)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "image", "type": "file", "src": "/path/to/photo.jpg" },
+            { "key": "password", "type": "text", "value": "1234" }
+          ]
+        },
+        "url": { "raw": "http://localhost:5000/api/vault/upload", "host": ["localhost"], "port": "5000", "path": ["api","vault","upload"] }
+      }
+    },
+    {
+      "name": "Vault - List",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "http://localhost:5000/api/vault", "host": ["localhost"], "port": "5000", "path": ["api","vault"] }
+      }
+    },
+    {
+      "name": "Vault - Get Item",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "http://localhost:5000/api/vault/VAULT_ITEM_ID", "host": ["localhost"], "port": "5000", "path": ["api","vault","VAULT_ITEM_ID"] }
+      }
+    },
+    {
+      "name": "Uploads - Download file (static)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "http://localhost:5000/uploads/FILENAME", "host": ["localhost"], "port": "5000", "path": ["uploads","FILENAME"] }
+      }
+    }
+  ]
+}

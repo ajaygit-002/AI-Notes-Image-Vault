@@ -1,3 +1,8 @@
+/*
+  frontend/src/pages/createNote/CreateNote.jsx
+  Page for creating notes. Includes an AI suggestion button that
+  calls the backend suggestion endpoint and displays returned hints.
+*/
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../components/style/createNote.css";

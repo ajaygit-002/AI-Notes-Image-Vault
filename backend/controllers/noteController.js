@@ -1,6 +1,5 @@
 const Note = require('../models/Note');
 
-// Create Note
 exports.createNote = async (req, res) => {
   try {
     const { title, content } = req.body;

@@ -1,3 +1,4 @@
+
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
@@ -6,7 +7,6 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const authMiddleware = require('../middleware/authMiddleware');
 
-// Register
 router.post('/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -20,7 +20,6 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Login
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -39,8 +38,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Forgot password - user provides new password directly
-// route: POST /api/auth/forgot-password
+
 router.post('/forgot-password', async (req, res) => {
   try {
     const { email, newPassword, confirmPassword } = req.body;
@@ -64,9 +62,9 @@ router.post('/forgot-password', async (req, res) => {
   }
 });
 
-// utility for looking up valid token using bcrypt compare
+
 async function findUserByResetToken(token) {
-  // find all users whose reset token hasn't expired
+  
   const candidates = await User.find({
     resetPasswordExpires: { $gt: Date.now() }
   });
@@ -79,8 +77,7 @@ async function findUserByResetToken(token) {
   return null;
 }
 
-// Reset password using token
-// route: POST /api/auth/reset-password/:token
+
 router.post('/reset-password/:token', async (req, res) => {
   try {
     const { token } = req.params;
@@ -108,14 +105,7 @@ router.post('/reset-password/:token', async (req, res) => {
   }
 });
 
-/*
-  (optional) You could also expose a /change-password route for authenticated users,
-  requiring the current password. It would look similar but verify req.body.oldPassword
-  against bcrypt.compare before updating user.password and saving.
-*/
 
-// verify token validity without changing password
-// always respond 200 so client doesn't see a network error
 router.post('/verify-reset-token', async (req, res) => {
   try {
     const { token } = req.body;
@@ -126,7 +116,7 @@ router.post('/verify-reset-token', async (req, res) => {
   }
 });
 
-// return profile info for authenticated user
+
 router.get('/profile', authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('name email createdAt');
@@ -137,8 +127,7 @@ router.get('/profile', authMiddleware, async (req, res) => {
   }
 });
 
-// Change password for authenticated user
-// route: POST /api/auth/change-password
+
 router.post('/change-password', authMiddleware, async (req, res) => {
   try {
     const { currentPassword, newPassword, confirmPassword } = req.body;
@@ -162,7 +151,7 @@ router.post('/change-password', authMiddleware, async (req, res) => {
   }
 });
 
-// Demo route to create a test user
+
 router.get('/demo-create-user', async (req, res) => {
   try {
     const demoEmail = 'demo@example.com';

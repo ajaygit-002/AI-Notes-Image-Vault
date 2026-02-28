@@ -1,3 +1,9 @@
+/*
+  frontend/src/pages/changePassword/ChangePassword.jsx
+  Dedicated change-password page for authenticated users. Verifies the
+  current password, posts the new password to the backend, and signs the
+  user out after a successful change.
+*/
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { parseJSON } from '../../utils/api';

@@ -1,17 +1,18 @@
+
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
 
-// vault endpoints do not require authentication; password protects upload
+
 const VaultItem = require('../models/VaultItem');
 
-// simple disk storage, files will be placed under backend/uploads
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, '..', 'uploads'));
   },
   filename: function (req, file, cb) {
-    // preserve original name; in production you'd want to sanitise
+
     cb(null, `${Date.now()}-${file.originalname}`);
   }
 });

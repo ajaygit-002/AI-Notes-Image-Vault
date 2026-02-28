@@ -1,3 +1,10 @@
+/*
+  frontend/src/pages/imageVault/ImageVault.jsx
+  Image vault UI. Client-side shows a single-session password gate
+  (in-memory) and lets authorized users upload images. Files are
+  actually stored on the backend filesystem and metadata is saved
+  in the `VaultItem` model.
+*/
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { parseJSON } from '../../utils/api';
