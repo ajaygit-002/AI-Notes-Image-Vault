@@ -5,6 +5,7 @@ import "../style/sidebar.css";
 
 function Sidebar({ isOpen, toggleSidebar }) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleCreateClick = () => {
     navigate("/notes/create");

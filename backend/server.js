@@ -7,7 +7,11 @@
   - No runtime behavior is changed by this comment.
 */
 require("dotenv").config();
-console.log("MONGO_URI from .env:", process.env.MONGO_URI); 
+if (process.env.DEBUG) {
+  console.log("MONGO_URI from .env:", process.env.MONGO_URI);
+  console.log("GEMINI_API_KEY from .env:", process.env.GEMINI_API_KEY ? "✓ SET" : "✗ MISSING");
+  console.log("GEMINI_API_URL from .env:", process.env.GEMINI_API_URL ? "✓ SET" : "✗ MISSING");
+} 
 
 const express = require("express");
 const cors = require("cors");

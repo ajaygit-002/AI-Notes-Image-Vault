@@ -1,25 +1,56 @@
 .app-container {
   display: flex;
   flex-direction: column;
-  /* confine entire app to viewport, no outer scrolling */
   height: 100vh;
   overflow: hidden;
+  background: linear-gradient(135deg, #f6f7fb 0%, #e8ebf5 100%);
 }
 
-/* Main content area */
+/* Main content area with scroll effect */
 .main-content {
-  margin-top: 50px; /* height of thin navbar */
-  margin-left: 260px;     /* width of sidebar */
+  margin-top: 50px;
+  margin-left: 260px;
   padding: 30px;
   transition: all 0.3s ease;
-  /* fill remaining viewport height beneath navbar and prevent overflow */
   height: calc(100vh - 50px);
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
 }
 
-/* Tablet */
+/* Smooth scroll effect */
+.main-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.main-content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.main-content::-webkit-scrollbar-thumb {
+  background: rgba(33, 150, 243, 0.4);
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(33, 150, 243, 0.7);
+}
+
+/* Fade in animation for page content */
+.main-content > * {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Transparent glass background */
+.main-content {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(8px);
+  border-radius: 16px 0 0 0;
+}
+
+/* Tablet responsive */
 @media (max-width: 1024px) {
   .main-content {
     margin-left: 220px;
@@ -27,10 +58,29 @@
   }
 }
 
-/* Mobile */
+/* Mobile responsive */
 @media (max-width: 768px) {
   .main-content {
     margin-left: 0;
     padding: 15px;
+    height: calc(100vh - 50px);
+  }
+}
+
+/* Scroll indicator at top */
+.scroll-indicator {
+  position: fixed;
+  top: 50px;
+  left: 260px;
+  height: 3px;
+  background: linear-gradient(90deg, #2196F3 0%, #21CBF3 100%);
+  width: 0%;
+  z-index: 999;
+  transition: width 0.1s ease;
+}
+
+@media (max-width: 768px) {
+  .scroll-indicator {
+    left: 0;
   }
 }

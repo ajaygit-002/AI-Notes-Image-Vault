@@ -1,144 +1,228 @@
 .create-note-page {
   max-width: 600px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 24px;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.create-note-page h1 {
+  background: rgba(26, 37, 47, 0.8);
+  color: white;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .create-note-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 16px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
+  gap: 8px;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.95rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .input-field,
 .textarea-field {
-  padding: 8px 12px;
+  padding: 12px;
   font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background: #fff;
-  color: #000;
+  border: 1px solid rgba(200, 200, 200, 0.3);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.7);
+  color: #2c3e50;
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
 }
 
-/* explicit light / dark mode overrides to avoid global !important rule conflicts */
-body:not(.dark-mode) .input-field,
-body:not(.dark-mode) .textarea-field {
-  background: #fff;
-  color: #000;
-  border: 1px solid #ccc;
+.input-field:focus,
+.textarea-field:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #2196F3;
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+  transform: translateY(-2px);
 }
 
-body.dark-mode .input-field,
-body.dark-mode .textarea-field {
-  background: #222 !important;
-  color: #fff !important;
-  border: 1px solid #444 !important;
+.input-field::placeholder,
+.textarea-field::placeholder {
+  color: rgba(44, 62, 80, 0.5);
 }
 
 .textarea-field {
-  min-height: 120px;
+  min-height: 150px;
   resize: vertical;
+  font-family: "Courier New", monospace;
 }
 
 .submit-btn {
-  padding: 10px 16px;
+  padding: 12px 24px;
   font-size: 1rem;
-  background-color: #007bff;
+  font-weight: 600;
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
 }
 
 .submit-btn:hover {
-  background-color: #0056b3;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
+  background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
 }
 
-/* AI suggestion button */
+/* AI suggestion button - glassmorphism */
 .ai-btn {
-  padding: 8px 12px;
+  padding: 10px 16px;
   font-size: 0.95rem;
-  background-color: #1976d2; /* match edit button blue */
+  background: rgba(25, 118, 210, 0.8);
   color: #fff;
-  border: none;
-  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   position: relative;
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
 }
-.ai-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
-/* small sticker/badge that appears on click */
+.ai-btn:hover:not(:disabled) {
+  background: rgba(25, 118, 210, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(25, 118, 210, 0.5);
+}
+
+.ai-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* AI response display box */
+.ai-suggestions {
+  animation: fadeInUp 0.4s ease-out;
+  background: rgba(227, 242, 253, 0.7) !important;
+  border: 1px solid rgba(33, 150, 243, 0.3);
+  padding: 16px;
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+}
+
 .ai-sticker {
   position: absolute;
   top: -8px;
   right: -8px;
   background: #fff;
-  color: #1967d2;
+  color: #1976d2;
   border-radius: 50%;
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
   transform: scale(0);
-  animation: popIn 260ms ease-out forwards;
+  animation: popIn 0.26s ease-out forwards;
 }
 
 @keyframes popIn {
-  from { transform: scale(0); }
-  to { transform: scale(1); }
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
+/* Mobile responsive */
 @media (max-width: 480px) {
   .create-note-page {
-    padding: 10px;
+    padding: 12px;
+  }
+
+  .create-note-page h1 {
+    font-size: 1.5rem;
+    padding: 12px;
   }
 
   .input-field,
   .textarea-field {
     font-size: 0.9rem;
   }
+
+  .textarea-field {
+    min-height: 120px;
+  }
 }
 
-/* Change Password page */
+/* Change Password page with transparency */
 .change-password-page {
   max-width: 540px;
   margin: 24px auto;
   padding: 20px;
   box-sizing: border-box;
+  animation: fadeInUp 0.6s ease-out;
 }
+
 .change-password-page h1 {
   margin-bottom: 12px;
   font-size: 1.4rem;
+  background: rgba(26, 37, 47, 0.6);
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  backdrop-filter: blur(8px);
 }
+
 .change-password-form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
+
+.change-password-form .form-group {
+  animation: fadeInUp 0.6s ease-out;
+}
+
 .change-password-actions {
-  margin-top: 14px;
+  margin-top: 16px;
   display: flex;
   gap: 10px;
+  animation: fadeInUp 0.6s ease-out;
 }
+
 .change-password-actions .ai-btn,
 .change-password-actions .submit-btn {
   flex: 1 1 auto;
 }
 
 @media (max-width: 600px) {
-  .change-password-page { padding: 12px; }
-  .change-password-actions { flex-direction: column; }
+  .change-password-page {
+    padding: 12px;
+  }
+  .change-password-actions {
+    flex-direction: column;
+  }
   .change-password-actions .ai-btn,
-  .change-password-actions .submit-btn { width: 100%; }
+  .change-password-actions .submit-btn {
+    width: 100%;
+  }
 }
