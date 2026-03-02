@@ -75,7 +75,7 @@ html, body, #root {
   min-height: 480px;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow: auto; /* allow scrolling on small devices so transparent scroll effect applies */
 }
 
 .main-container {
@@ -272,6 +272,10 @@ html, body, #root {
     width: 100%;
     min-width: 0;
     padding: 20px;
+    /* soft transparent card on mobile to match global glass effect */
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.6);
   }
 
   .toggle-password-eye {

@@ -58,6 +58,22 @@
   }
 }
 
+/* Mobile fix: allow page to scroll and ensure inputs can receive focus
+   (prevents fixed 100vh overflow from blocking keyboard / focus on mobile) */
+@media (max-width: 768px) {
+  .app-container {
+    overflow: auto;
+    height: auto;
+  }
+
+  .main-content {
+    margin-left: 0;
+    height: auto;
+    min-height: calc(100vh - 50px);
+    padding: 16px;
+  }
+}
+
 /* Mobile responsive */
 @media (max-width: 768px) {
   .main-content {

@@ -3,16 +3,17 @@
   margin: 0 auto;
   padding: 24px;
   animation: fadeInUp 0.6s ease-out;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
 }
 
 .create-note-page h1 {
-  background: rgba(26, 37, 47, 0.8);
-  color: white;
-  padding: 16px;
-  border-radius: 12px;
+  background: transparent;
+  color: #2c3e50;
+  padding: 8px 0;
+  border-radius: 8px;
   margin-bottom: 24px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .create-note-form {
@@ -170,6 +171,31 @@
 
   .textarea-field {
     min-height: 120px;
+  }
+}
+
+/* Word-level corrections display */
+.word-level-changes {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #444;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.word-level-changes ul {
+  margin-top: 6px;
+  padding-left: 18px;
+}
+
+@media (max-width: 600px) {
+  .word-level-changes {
+    align-items: center;
+    text-align: center;
+  }
+  .word-level-changes ul {
+    padding-left: 0;
+    list-style-position: inside;
   }
 }
 

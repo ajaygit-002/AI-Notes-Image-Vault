@@ -316,12 +316,17 @@ function CreateNote() {
 
             {/* Show word-level corrections if present */}
             {correctedWords && correctedWords.length > 0 && (
-              <div style={{ marginTop: '10px', fontSize: '13px', color: '#444' }}>
+              <div className="word-level-changes">
                 <strong>Word-level changes:</strong>
-                <ul style={{ marginTop: '6px' }}>
-                  {correctedWords.map((c, i) => (
-                    <li key={i}>{c.from || '—'} → <strong>{c.to || '—'}</strong></li>
-                  ))}
+                <ul>
+                  {correctedWords.map((c, i) => {
+                    const from = c.from || '—';
+                    const toRaw = c.to || '—';
+                    const to = toRaw === '—' ? toRaw : (/[.!?]$/.test(toRaw) ? toRaw : toRaw + '.');
+                    return (
+                      <li key={i}>{from} → <strong>{to}</strong></li>
+                    );
+                  })}
                 </ul>
               </div>
             )}
