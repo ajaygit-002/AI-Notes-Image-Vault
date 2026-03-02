@@ -24,6 +24,17 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Simple request logger for API routes to aid debugging
+app.use('/api', (req, res, next) => {
+  try {
+    const auth = req.headers.authorization ? 'yes' : 'no';
+    console.log(`[API] ${new Date().toISOString()} ${req.method} ${req.originalUrl} auth:${auth}`);
+  } catch (e) {
+    // ignore logging errors
+  }
+  next();
+});
+
 // MongoDB Connection
 const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/login";
 
@@ -49,11 +60,24 @@ const authRoutes = require('./routes/authRoutes');
 const noteRoutes = require('./routes/noteRoutes');
 const vaultRoutes = require('./routes/vaultRoutes');
 const suggestCorrections = require('./routes/suggestCorrections');
+const aiRoutes = require('./routes/aiRoutes');
 // mount routes
 app.use('/api/auth', authRoutes);
 app.use('/api/notes', noteRoutes);
 app.use('/api/vault', vaultRoutes);
 app.use('/api/notes', suggestCorrections);
+app.use('/api/ai', aiRoutes);
+// If an /api/* route is not handled above, return JSON 404 instead of falling through to any frontend
+app.use('/api', (req, res) => {
+  res.status(404).json({ message: 'API route not found' });
+});
+
+// JSON error handler — ensures unexpected errors return JSON (not HTML)
+app.use((err, req, res, next) => {
+  console.error('Unhandled server error:', err);
+  if (res.headersSent) return next(err);
+  res.status(err.status || 500).json({ message: err.message || 'Internal Server Error' });
+});
 // expose uploaded files for manual inspection if needed
 app.use('/uploads', express.static('uploads'));
 
