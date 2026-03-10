@@ -4,14 +4,15 @@
   left: 0;
   right: 0;
 
-  height: 50px;
-  background: #fff; /* light bar in light mode */
-  color: #000;
+  height: 60px; /* slightly taller for modern look */
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  color: var(--text-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  padding: 0 24px;
+  border-bottom: 1px solid var(--border-color);
   z-index: 1000;
 }
 
@@ -28,7 +29,7 @@
   font-size: 1.5rem;
   cursor: pointer;
   margin-right: 12px;
-  color: #000; /* default (light mode) icon color */
+  color: var(--text-color);
 }
 
 .theme-btn {
@@ -36,7 +37,11 @@
   border: none;
   font-size: 1.3rem;
   cursor: pointer;
-  color: #000; /* default icon color */
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+}
+.theme-btn:hover {
+  color: var(--primary-color);
 }
 
 /* show menu button when viewport is narrow */
@@ -50,22 +55,5 @@
   }
 }
 
-/* icon color in dark mode */
-body.dark-mode .menu-btn,
-body.dark-mode .theme-btn {
-  color: #fff; /* white icons on dark bar */
-}
-
-/* default icon colors (light mode) */
-.menu-btn,
-.theme-btn {
-  color: #000;
-}
-
-/* dark mode styling toggled on body */
-/* invert navbar colors in dark mode */
-body.dark-mode .top-navbar.simple {
-  background: #000; /* dark bar in dark mode */
-  color: #fff;
-}
+/* body.dark-mode specific overrides removed because CSS variables handle it automatically */
 

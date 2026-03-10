@@ -6,6 +6,7 @@ import './notes.css';
 function Notes() {
   const [notes, setNotes] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -15,6 +16,7 @@ function Notes() {
 
   useEffect(() => {
     const fetchNotes = async () => {
+      setLoading(true);
       try {
         const token = localStorage.getItem('token');
         let url = 'http://localhost:5000/api/notes';
@@ -34,6 +36,8 @@ function Notes() {
       } catch (err) {
         console.error(err);
         setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
     fetchNotes();
@@ -83,20 +87,32 @@ function Notes() {
     <div className="notes-page">
       <h1>Notes {tag ? `#${tag}` : ''}</h1>
       {error && <p style={{color:'red'}}>{error}</p>}
-      {notes.length === 0 && <p>No notes found.</p>}
-      <div className="notes-container">
-        {notes.map(n => (
-          <div className="note-card" key={n._id}>
-            <div className="note-title">{n.title}</div>
-            <div className="note-content">{n.content}</div>
-            <div className="note-date">{new Date(n.createdAt).toLocaleString()}</div>
-            <div className="note-actions">
-              <button className="note-edit-btn" title="Edit" onClick={() => navigate(`/notes/edit/${n._id}`)}>Edit</button>
-              <button className="note-delete-btn" title="Delete" onClick={() => handleDelete(n._id)}>Delete</button>
+      
+      {loading ? (
+        <div className="loading-state">
+           <div className="spinner"></div>
+           <p>Loading notes...</p>
+        </div>
+      ) : notes.length === 0 ? (
+        <div className="empty-state">
+          <p style={{ fontSize: '1.2rem', marginBottom: '16px' }}>📝 No notes found. Create your first note!</p>
+          <button className="submit-btn" style={{ padding: '8px 16px', fontSize: '1rem' }} onClick={() => navigate('/notes/create')}>Create Note</button>
+        </div>
+      ) : (
+        <div className="notes-container">
+          {notes.map(n => (
+            <div className="note-card" key={n._id}>
+              <div className="note-title">{n.title}</div>
+              <div className="note-content">{n.content}</div>
+              <div className="note-date">{new Date(n.createdAt).toLocaleString()}</div>
+              <div className="note-actions">
+                <button className="note-edit-btn" title="Edit" onClick={() => navigate(`/notes/edit/${n._id}`)}>Edit</button>
+                <button className="note-delete-btn" title="Delete" onClick={() => handleDelete(n._id)}>Delete</button>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

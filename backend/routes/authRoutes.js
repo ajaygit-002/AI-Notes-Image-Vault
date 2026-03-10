@@ -36,7 +36,10 @@ const authMiddleware = require('../middleware/authMiddleware');
 // Request body: { email, password }
 router.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const email = req.body.email?.trim();
+    const password = req.body.password;
+
+    if (!email || !password) return res.status(400).json({ message: 'Email and password are required' });
 
     // Find the user by email
     const user = await User.findOne({ email });

@@ -1,12 +1,26 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  --font-primary: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  
+  /* Light mode colors */
+  --bg-color: #f8fafc;
+  --text-color: #0f172a;
+  --text-muted: #64748b;
+  --primary-color: #4f46e5;
+  --primary-hover: #4338ca;
+  --card-bg: rgba(255, 255, 255, 0.7);
+  --border-color: rgba(226, 232, 240, 0.8);
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.4);
+
+  font-family: var(--font-primary);
+  line-height: 1.6;
   font-weight: 400;
 
   color-scheme: light dark;
-  /* default to light palette; app toggle or media query will override */
-  color: #213547;
-  background-color: #ffffff;
+  color: var(--text-color);
+  background-color: var(--bg-color);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -21,17 +35,18 @@ html, body {
 
 /* if the user explicitly chooses light mode via the toggle, always use light base */
 body:not(.dark-mode) {
-  background-color: #ffffff;
-  color: #213547;
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--primary-color);
   text-decoration: inherit;
+  transition: color 0.2s ease;
 }
 a:hover {
-  color: #535bf2;
+  color: var(--primary-hover);
 }
 
 body {
@@ -56,84 +71,94 @@ button {
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  font-family: var(--font-primary);
+  background-color: var(--primary-color);
+  color: white;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: all 0.25s ease;
+  box-shadow: var(--shadow-sm);
 }
 button:hover {
-  border-color: #646cff;
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
 }
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: 4px auto var(--primary-hover);
 }
 
 @media (prefers-color-scheme: light) {
-  /* prefers light already matches our default, so nothing special needed */
   a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+    color: var(--primary-hover);
   }
 }
 
 @media (prefers-color-scheme: dark) {
   /* system dark preference should use a darker root palette, but user toggle has priority */
   :root {
-    color: #f5f7fb;
-    background-color: #242424;
+    --bg-color: #0f172a;
+    --text-color: #f8fafc;
+    --text-muted: #94a3b8;
+    --card-bg: rgba(30, 41, 59, 0.7);
+    --border-color: rgba(51, 65, 85, 0.8);
+    --glass-bg: rgba(30, 41, 59, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.1);
   }
 }
 
 /* explicit dark-mode overrides triggered by body.dark-mode */
 body.dark-mode {
-  background-color: #1a1a2e;
-  color: #f5f7fb;
+  --bg-color: #0f172a;
+  --text-color: #f8fafc;
+  --text-muted: #94a3b8;
+  --card-bg: rgba(30, 41, 59, 0.7);
+  --border-color: rgba(51, 65, 85, 0.8);
+  --glass-bg: rgba(30, 41, 59, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.1);
+
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
+
 body.dark-mode .sidebar {
-  background: #2c2c44;
-  border-right: 1px solid #444;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border-right: 1px solid var(--glass-border);
 }
 body.dark-mode .sidebar nav ul li {
-  color: #ccc;
+  color: var(--text-muted);
 }
 body.dark-mode .sidebar nav ul li:hover,
 body.dark-mode .sidebar nav ul li.active {
-  background: #3a3a5a;
-  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-color);
 }
 body.dark-mode .main-content,
 body.dark-mode .page-body {
-  background: #1a1a2e;
-  color: #ddd;
+  background: transparent;
+  color: var(--text-color);
 }
 body.dark-mode .stat-card,
 body.dark-mode .note-card,
 body.dark-mode .chart-card {
-  background: #2a2a3c;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
 }
 body.dark-mode .stat-card .stat-label,
 body.dark-mode .note-card-excerpt,
 body.dark-mode .note-card-footer {
-  color: #aaa;
+  color: var(--text-muted);
 }
 body.dark-mode .stat-card .stat-value,
 body.dark-mode .stat-card .stat-sub,
 body.dark-mode .note-card-header h3 {
-  color: #fff;
+  color: var(--text-color);
 }
 
 /* dashboard chart title legibility */
 body.dark-mode .chart-card h2 {
-  color: #f5f7fb;
-}
-
-/* make every UI element the same color in dark mode */
-body.dark-mode * {
-  background-color: #2a2a3c !important;
-  color: #eee !important;
-  border-color: #444 !important;
+  color: var(--text-color);
 }

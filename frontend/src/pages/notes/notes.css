@@ -90,9 +90,11 @@ body:not(.dark-mode) .note-date {
 }
 
 .note-card {
-  background: #fff;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
   border-radius: 14px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: var(--shadow-sm);
   padding: 18px;
   display: flex;
   flex-direction: row;

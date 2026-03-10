@@ -16,13 +16,29 @@ if (process.env.DEBUG) {
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 
 const app = express();
 
 // Middleware
+app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Rate Limiting Config
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per window
+  message: { message: "Too many requests, please try again later." }
+});
+
+const strictLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20, // stricter limit for auth and AI
+  message: { message: "Too many requests to this endpoint, please try again later." }
+});
 
 // Simple request logger for API routes to aid debugging
 app.use('/api', (req, res, next) => {
@@ -62,11 +78,11 @@ const vaultRoutes = require('./routes/vaultRoutes');
 const suggestCorrections = require('./routes/suggestCorrections');
 const aiRoutes = require('./routes/aiRoutes');
 // mount routes
-app.use('/api/auth', authRoutes);
-app.use('/api/notes', noteRoutes);
-app.use('/api/vault', vaultRoutes);
-app.use('/api/notes', suggestCorrections);
-app.use('/api/ai', aiRoutes);
+app.use('/api/auth', strictLimiter, authRoutes);
+app.use('/api/notes', apiLimiter, noteRoutes);
+app.use('/api/vault', apiLimiter, vaultRoutes);
+app.use('/api/notes', strictLimiter, suggestCorrections);
+app.use('/api/ai', strictLimiter, aiRoutes);
 // If an /api/* route is not handled above, return JSON 404 instead of falling through to any frontend
 app.use('/api', (req, res) => {
   res.status(404).json({ message: 'API route not found' });

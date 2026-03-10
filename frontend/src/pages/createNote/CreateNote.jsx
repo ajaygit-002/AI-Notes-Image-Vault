@@ -20,62 +20,120 @@ function CreateNote() {
   const [correctedPreview, setCorrectedPreview] = useState('');
   const [correctedWords, setCorrectedWords] = useState([]); // [{from, to, index}]
   const [loadingAI, setLoadingAI] = useState(false);
+  const [aiMode, setAiMode] = useState('');
+  // default to corrections if no mode selected
+  React.useEffect(() => {
+    if (!aiMode) setAiMode('corrections');
+  }, []);
   
   const navigate = useNavigate();
+  const API_BASE = import.meta.env.DEV ? (import.meta.env.VITE_API_BASE || 'http://localhost:5000') : (import.meta.env.VITE_API_BASE || '');
 
-  // Function: Call AI to get text corrections
-  const handleAISuggest = async () => {
+  // Function: Call AI to get text corrections or other transformations
+  const handleAISuggest = async (mode = 'corrections') => {
     setError("");
     setLoadingAI(true);
     setAiResponse(null);  // Clear previous response
+    setAiMode(mode);
+
+    // Quick API health check to ensure backend route/proxy is reachable and returns JSON
+    try {
+      const testRes = await fetch(`${API_BASE}/api/ai/test`, { method: 'GET' });
+      const testText = await testRes.text();
+      if (!testRes.ok) {
+        throw new Error(`API test failed: ${testRes.status} - ${testText.slice(0,200)}`);
+      }
+      // if the test returned HTML, bail early with a helpful message
+      if ((testText || '').trim().startsWith('<')) {
+        throw new Error('API test returned HTML instead of JSON. Check backend route/proxy/order.');
+      }
+    } catch (apiTestErr) {
+      setLoadingAI(false);
+      console.error('API connectivity test failed:', apiTestErr);
+      setError('Could not reach AI API: ' + String(apiTestErr.message || apiTestErr));
+      return;
+    }
 
     try {
-      // Send the content to the backend API
-      const res = await fetch('/api/notes/suggest-corrections', {
+      // Send the content and the requested mode to the backend AI route
+      const res = await fetch(`${API_BASE}/api/ai/generate`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: content }),
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` },
+        body: JSON.stringify({ content, type: mode }),
       });
 
-      const data = await res.json();
+      // Read as text first to avoid JSON parse errors when server returns HTML (e.g. 404 page)
+      const text = await res.text();
+      let parsed;
+      try {
+        parsed = JSON.parse(text);
+      } catch (e) {
+        // If the server returned HTML (starts with '<'), give a clearer error
+        const trimmed = (text || '').trim();
+        if (trimmed.startsWith('<')) {
+          throw new Error('Server returned HTML instead of JSON (check backend route or CORS).');
+        }
+        parsed = text; // fallback to raw text
+      }
 
       if (!res.ok) {
-        throw new Error(data.error || 'AI suggestion failed');
+        const errMsg = (parsed && parsed.message) || (typeof parsed === 'string' ? parsed : JSON.stringify(parsed));
+        throw new Error(errMsg || 'AI suggestion failed');
       }
 
-      // Store the response to display it
-      setAiResponse(data);
+      // Normalize payload into the shape { success, data }
+      const payload = (parsed && typeof parsed === 'object' && ('data' in parsed || 'success' in parsed))
+        ? parsed
+        : { success: true, data: parsed, raw: text };
 
-      // Extract a concise "corrected" sentence to show in the UI.
-      // Many providers return a block of text that contains a "Corrected text:" section
-      // (our local fallback uses that format). Try to extract that; otherwise fall back
-      // to the first non-empty line of the AI response.
-      const raw = data?.data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-      const extractCorrected = (s) => {
-        if (!s) return '';
-        // Look for 'Corrected text:' marker
-        const match = s.match(/Corrected text:\s*"([\s\S]*?)"/i);
-        if (match && match[1]) return match[1].trim();
-        // Otherwise, take the first non-empty line as the short correction
+      setAiResponse(payload);
+
+      const data = payload.data;
+
+      // If backend returned structured object, handle by mode
+      if (data && typeof data === 'object') {
+        // Title generation
+        if (data.title && mode === 'title') {
+          setTitle(String(data.title));
+        }
+
+        // Corrections (structured)
+        if (data.corrected) {
+          setCorrectedPreview(String(data.corrected));
+        }
+        if (Array.isArray(data.changes)) {
+          setCorrectedWords(data.changes.map((c, i) => ({ index: c.index ?? i, from: c.from || '', to: c.to || '' })));
+        }
+
+        // Summary / shorten / expand / improve may return a 'summary' or plain text in 'text' key
+        if (data.summary && (mode === 'summarize' || mode === 'shorten')) {
+          setCorrectedPreview(String(data.summary));
+        }
+        if (data.text && typeof data.text === 'string' && !data.corrected) {
+          setCorrectedPreview(data.text);
+        }
+      } else if (typeof data === 'string') {
+        // Fallback: treat returned string as raw text
+        const s = data;
+        // extract first non-empty line
         const lines = s.split('\n').map(l => l.trim()).filter(Boolean);
-        return lines.length ? lines[0] : s.trim();
-      };
+        const short = lines.length ? lines[0] : s;
+        setCorrectedPreview(short);
 
-      setCorrectedPreview(extractCorrected(raw));
-
-      // Compute simple word-level diffs between original content and the corrected preview
-      const tokensOrig = (content || '').split(/\s+/).filter(Boolean);
-      const tokensCorr = (extractCorrected(raw) || '').split(/\s+/).filter(Boolean);
-      const diffs = [];
-      const len = Math.max(tokensOrig.length, tokensCorr.length);
-      for (let i = 0; i < len; i++) {
-        const o = tokensOrig[i] || '';
-        const c = tokensCorr[i] || '';
-        if (o !== c) {
-          diffs.push({ index: i, from: o, to: c });
+        // compute simple token diffs when in corrections mode
+        if (mode === 'corrections') {
+          const tokensOrig = (content || '').split(/\s+/).filter(Boolean);
+          const tokensCorr = (short || '').split(/\s+/).filter(Boolean);
+          const diffs = [];
+          const len = Math.max(tokensOrig.length, tokensCorr.length);
+          for (let i = 0; i < len; i++) {
+            const o = tokensOrig[i] || '';
+            const c = tokensCorr[i] || '';
+            if (o !== c) diffs.push({ index: i, from: o, to: c });
+          }
+          setCorrectedWords(diffs);
         }
       }
-      setCorrectedWords(diffs);
     } catch (err) {
       // Detect network-level failures (e.g. backend not running, CORS/network)
       const msg = String(err?.message || err || 'Unknown error');
@@ -113,7 +171,9 @@ function CreateNote() {
     }
 
     try {
-      const toApply = correctedPreview || aiResponse.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      // If backend returned structured object with 'corrected' or 'text', prefer that
+      const payload = aiResponse.data;
+      const toApply = correctedPreview || (payload && typeof payload === 'object' ? (payload.corrected || payload.text) : null) || aiResponse.data?.candidates?.[0]?.content?.parts?.[0]?.text;
       if (!toApply) {
         setError('Could not extract correction text');
         return;
@@ -224,14 +284,67 @@ function CreateNote() {
 
           {/* AI Suggestion button */}
           <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginTop: '8px' }}>
-            <button 
-              type="button" 
-              className="ai-btn" 
-              onClick={handleAISuggest} 
-              disabled={loadingAI || !content}
-            >
-              {loadingAI ? "🔄 Generating corrections..." : "✨ Suggest Corrections"}
-            </button>
+            <div className="ai-toolbar">
+              <button
+                type="button"
+                className={`ai-feature-btn ${aiMode === 'summarize' ? 'active' : ''}`}
+                onClick={() => setAiMode('summarize')}
+                disabled={loadingAI || !content}
+                title="Auto Summarize"
+              >
+                ✨ Auto Summarize
+              </button>
+
+              <button
+                type="button"
+                className={`ai-feature-btn ${aiMode === 'improve' ? 'active' : ''}`}
+                onClick={() => setAiMode('improve')}
+                disabled={loadingAI || !content}
+                title="Improve Writing"
+              >
+                🧠 Improve Writing
+              </button>
+
+              <button
+                type="button"
+                className={`ai-feature-btn ${aiMode === 'title' ? 'active' : ''}`}
+                onClick={() => setAiMode('title')}
+                disabled={loadingAI || !content}
+                title="Generate Title"
+              >
+                📌 Generate Title
+              </button>
+
+              <button
+                type="button"
+                className={`ai-feature-btn ${aiMode === 'shorten' ? 'active' : ''}`}
+                onClick={() => setAiMode('shorten')}
+                disabled={loadingAI || !content}
+                title="Convert long → short"
+              >
+                🔎 Long → Short
+              </button>
+
+              <button
+                type="button"
+                className={`ai-feature-btn ${aiMode === 'expand' ? 'active' : ''}`}
+                onClick={() => setAiMode('expand')}
+                disabled={loadingAI || !content}
+                title="Expand short → detailed"
+              >
+                📚 Expand
+              </button>
+
+              <button
+                type="button"
+                className="ai-btn"
+                onClick={() => handleAISuggest(aiMode || 'corrections')}
+                disabled={loadingAI || !content}
+                title={`Run AI (${aiMode || 'corrections'})`}
+              >
+                {loadingAI ? "🔄 Generating..." : `✨ Run: ${aiMode || 'Corrections'}`}
+              </button>
+            </div>
           </div>
         </div>
 

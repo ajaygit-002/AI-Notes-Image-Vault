@@ -1,9 +1,4 @@
-/*
-  frontend/src/pages/profile/Profile.jsx
-  Profile page: fetches authenticated user's profile and provides
-  navigation to change or reset password. Uses `parseJSON` helper
-  for robust response parsing.
-*/
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import "./profile.css";

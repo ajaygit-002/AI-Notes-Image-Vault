@@ -19,6 +19,7 @@ function ImageVault() {
   const [message, setMessage] = useState('');
   const [authorized, setAuthorized] = useState(isVaultAuthorized());
   const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const checkPassword = (e) => {
     e.preventDefault();
@@ -35,6 +36,7 @@ function ImageVault() {
 
   // helper to fetch vault items
   const loadItems = async () => {
+    setLoading(true);
     try {
       const res = await fetch('http://localhost:5000/api/vault');
       const data = await parseJSON(res);
@@ -43,6 +45,8 @@ function ImageVault() {
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -137,7 +141,20 @@ function ImageVault() {
       {error && <p className="vault-error">{error}</p>}
       {message && <p className="vault-message">{message}</p>}
 
-      {authorized && items.length > 0 && (
+      {loading && (
+        <div className="loading-state">
+           <div className="spinner"></div>
+           <p>Loading vault items...</p>
+        </div>
+      )}
+
+      {authorized && !loading && items.length === 0 && (
+        <div className="empty-state">
+          <p style={{ fontSize: '1.2rem' }}>📸 Vault is empty. Upload an image above!</p>
+        </div>
+      )}
+
+      {authorized && !loading && items.length > 0 && (
         <div className="vault-gallery">
           {items.map(item => (
             <div key={item._id} className="vault-item" onClick={() => navigate(`/vault/${item._id}`)}>
